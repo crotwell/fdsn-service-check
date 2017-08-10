@@ -2,9 +2,9 @@
 import * as seisplotjs from 'seisplotjs';
 import {DS, EV, ST, serviceHost, doesSupport } from './util';
 
-import {testEventVersion} from './eventversion';
-import {testStationVersion} from './stationVersion';
-import {testDataSelectVersion} from './dataSelectVersion';
+import {testEventVersion} from './testEventVersion';
+import {testStationVersion} from './testStationVersion';
+import {testDataSelectVersion} from './testDataSelectVersion';
 import {testNoData204Event} from './testNoData204Event';
 import {testNoDataEvent} from './testNoDataEvent';
 import {testLastDay} from './testLastDay';
