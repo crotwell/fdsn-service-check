@@ -18,7 +18,8 @@
     "url": "https://github.com/crotwell/fdsn-service-check.git"
   },
   "keywords": [
-    "fdsn", "fdsnws",
+    "fdsn",
+    "fdsnws",
     "seismology",
     "miniseed",
     "quakeml",
