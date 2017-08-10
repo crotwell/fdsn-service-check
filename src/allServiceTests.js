@@ -1,6 +1,8 @@
 
-// big function to corral everything
-let allFdsnTests = function() {
+import {testEventVersion} from './eventversion';
+import * as seisplotjs from 'seisplotjs';
+import {DS, EV, ST, serviceHost, doesSupport } from './util';
+
 
 
 // seisplotjs comes from the seisplotjs standalone bundle
@@ -10,38 +12,14 @@ let fdsndataselect = seisplotjs.fdsndataselect;
 let RSVP = fdsnstation.RSVP;
 
 
-let DS = "fdsnws-dataselect";
-let EV = "fdsn-event";
-let ST = "fdsn-station";
+//let DS = "fdsnws-dataselect";
+//let EV = "fdsn-event";
+//let ST = "fdsn-station";
 
 
 
 // all tests should be object with testid, testname and test: function(datacenter, d3selector)
 
-let testEventVersion = {
-  testname: "Event Version",
-  testid: "eventversion",
-  description: "Queries the version of the service, success as long as the query returns something",
-  webservices: [ EV ],
-  severity: 'severe',
-  test: function(dc) {
-    let host = serviceHost(dc, EV);
-
-    let quakeQuery = new fdsnevent.EventQuery()
-      .host(host);
-    let url = quakeQuery.formVersionURL();
-    return quakeQuery.queryVersion().then(function(version) {
-      return {
-        text: version,
-        output: version,
-        url: url
-      };
-    }).catch(function(err) {
-      if (! err.url) {err.url = url;}
-      throw err;
-    });
-  }
-};
 
 
 let testStationVersion = {
@@ -1335,7 +1313,7 @@ let testDataSelectRecent = {
 // end test defs
 
 
-function doesSupport(dc, type) {
+function old_doesSupport(dc, type) {
   let out = dc.supports.find(function(s) { return s.type === type;});
 //  if (! out) {
 //    let dcws = dc.supports.map(function(d) { return d.type; }).join(',');
@@ -1344,7 +1322,7 @@ function doesSupport(dc, type) {
   return typeof out != 'undefined';
 }
 
-function serviceHost(dc, type) {
+function old_serviceHost(dc, type) {
   let does = doesSupport(dc, type);
   if (does) {
     return does.host ? does.host : dc.host;
@@ -1383,9 +1361,5 @@ let justVersionTest = {
 //let out = notVersionTest;
 //let out = justVersionTest;
 //let out = justOneTest;
-let out = tests;
-// util functions
-out.serviceHost = serviceHost;
-out.doesSupport = doesSupport;
-return out;
-}();
+export let allFdsnTests = tests;
+

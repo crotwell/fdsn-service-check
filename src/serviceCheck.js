@@ -1,16 +1,27 @@
+
+
+import {allFdsnTests} from './allServiceTests';
+import * as seisplotjs from 'seisplotjs';
+import {DS, EV, ST, serviceHost, doesSupport } from './util';
+
 // seisplotjs comes from the seisplotjs standalone bundle
 let d3 = seisplotjs.d3;
 let fdsnevent = seisplotjs.fdsnevent;
 let fdsnstation = seisplotjs.fdsnstation;
 let fdsndataselect = seisplotjs.fdsndataselect;
 let RSVP = fdsnstation.RSVP;
+let UNSUPPORTED = "Unsupported";
 
 console.log("allFdsnTests: "+allFdsnTests);
 
+let fdsnDataCenters = null;
 
-let DS = "fdsnws-dataselect";
-let EV = "fdsn-event";
-let ST = "fdsn-station";
+d3.json('fdsnDataCenters.json', function(fdsn) {
+  fdsnDataCenters = fdsn;
+  makeTable(fdsn);
+});
+
+
 
 
 // all tests should be object with testid, testname and test: function(datacenter, d3selector)
@@ -23,7 +34,6 @@ let ST = "fdsn-station";
 //     fdsnDataTests = [ testDataSelectVersion ]
 // }
 
-let UNSUPPORTED = "Unsupported";
 
 function selectionForTestDC(test, dc) {
   let sel = d3.select("tr."+test.testid).select("td.testresult");
@@ -125,13 +135,6 @@ console.log("error with no URL", err);
       //return err;
   });
 }
-
-let fdsnDataCenters = null;
-
-d3.json('fdsnDataCenters.json', function(fdsn) {
-  fdsnDataCenters = fdsn;
-  makeTable(fdsn);
-});
 
 function makeTable(fdsn) {
   let div = d3.select(".datacenters");
@@ -347,7 +350,7 @@ RSVP.all(dcTests.map(function(dcT) { return RSVP.hash(dcT);}))
 //    });
 }
 
-function doesSupport(dc, type) {
+function old_doesSupport(dc, type) {
   let out = dc.supports.find(function(s) { return s.type === type;});
 //  if (! out) {
 //    let dcws = dc.supports.map(function(d) { return d.type; }).join(',');
@@ -357,7 +360,7 @@ function doesSupport(dc, type) {
 
 }
 
-function serviceHost(dc, type) {
+function old_serviceHost(dc, type) {
   let does = doesSupport(dc, type);
   if (does) {
     return does.host ? does.host : dc.host;
