@@ -1,16 +1,16 @@
 // seisplotjs comes from the seisplotjs standalone bundle
-var d3 = seisplotjs.d3;
-var fdsnevent = seisplotjs.fdsnevent;
-var fdsnstation = seisplotjs.fdsnstation;
-var fdsndataselect = seisplotjs.fdsndataselect;
-var RSVP = fdsnstation.RSVP;
+let d3 = seisplotjs.d3;
+let fdsnevent = seisplotjs.fdsnevent;
+let fdsnstation = seisplotjs.fdsnstation;
+let fdsndataselect = seisplotjs.fdsndataselect;
+let RSVP = fdsnstation.RSVP;
 
 console.log("allFdsnTests: "+allFdsnTests);
 
 
-var DS = "fdsnws-dataselect";
-var EV = "fdsn-event";
-var ST = "fdsn-station";
+let DS = "fdsnws-dataselect";
+let EV = "fdsn-event";
+let ST = "fdsn-station";
 
 
 // all tests should be object with testid, testname and test: function(datacenter, d3selector)
@@ -23,16 +23,16 @@ var ST = "fdsn-station";
 //     fdsnDataTests = [ testDataSelectVersion ]
 // }
 
-var UNSUPPORTED = "Unsupported";
+let UNSUPPORTED = "Unsupported";
 
 function selectionForTestDC(test, dc) {
-  var sel = d3.select("tr."+test.testid).select("td.testresult");
+  let sel = d3.select("tr."+test.testid).select("td.testresult");
   return sel;
 }
 
 function runTestOnDC(test, dc, DCType) {
-  var testRunStart = performance.now();
-  var sel = selectionForTestDC(test, dc);
+  let testRunStart = performance.now();
+  let sel = selectionForTestDC(test, dc);
 console.log("RunTestOnDC: "+test.testname+" "+dc.id+" "+DCType+"  sup="+doesSupport(dc, DCType));
   if ( ! doesSupport(dc, DCType) ) {
     return new RSVP.Promise(function(resolve) {
@@ -53,7 +53,7 @@ console.log("RunTestOnDC: "+test.testname+" "+dc.id+" "+DCType+"  sup="+doesSupp
 console.log("run "+test.testname+" on "+dc.id+" "+DCType);
      return test.test(dc)
        .then(function(result) {
-         var out = {
+         let out = {
            text: "ok",
            test: test,
            dc: dc,
@@ -78,21 +78,21 @@ console.log("run "+test.testname+" on "+dc.id+" "+DCType);
           .attr("class", "success")
           .attr("href", testOut.url)
           .text("OK");
-      var messageSel = d3.select("tr."+test.testid).select("td.testmessage");
+      let messageSel = d3.select("tr."+test.testid).select("td.testmessage");
       messageSel.selectAll("*").remove();
       messageSel.append("span").text(testOut.text);
-      var runtimeSel = d3.select("tr."+test.testid).select("td.runtime");
+      let runtimeSel = d3.select("tr."+test.testid).select("td.runtime");
       runtimeSel.selectAll("*").remove();
       runtimeSel.append("span").text(Math.round(testOut.runtime)/1000);
       return testOut;
   }).catch(function(err) {
-      var messageSel = d3.select("tr."+test.testid).select("td.testmessage");
+      let messageSel = d3.select("tr."+test.testid).select("td.testmessage");
 console.log("catch in test='"+test.testname+"' on "+dc.id+" "+DCType);
 console.assert(false, err);
 if (err.url) {
 console.log("   url: "+err.url);
 }
-      var failClass = 'fail';
+      let failClass = 'fail';
       if (test.severity === 'opinion') {
         failClass = 'failOpinion';
       }
@@ -103,7 +103,7 @@ console.log("   url: "+err.url);
          sel.append("span").text("unsupported");
       } else {
         console.assert(false, err);
-        var popupText = "";
+        let popupText = "";
         if (err.message) {popupText += err.message;}
         if (typeof err.status != 'undefined') {
           popupText += " status="+err.status;
@@ -126,7 +126,7 @@ console.log("error with no URL", err);
   });
 }
 
-var fdsnDataCenters = null;
+let fdsnDataCenters = null;
 
 d3.json('fdsnDataCenters.json', function(fdsn) {
   fdsnDataCenters = fdsn;
@@ -134,12 +134,12 @@ d3.json('fdsnDataCenters.json', function(fdsn) {
 });
 
 function makeTable(fdsn) {
-  var div = d3.select(".datacenters");
+  let div = d3.select(".datacenters");
   div.select("p").remove();
-  var table = div.select("table");
+  let table = div.select("table");
   if ( table.empty()) {
     table = d3.select(".datacenters").append("table");
-    var thr = table.append("thead").append("tr");
+    let thr = table.append("thead").append("tr");
     thr.append("th").text("Name");
     thr.append("th").text("Event");
     thr.append("th").text("Station");
@@ -147,12 +147,12 @@ function makeTable(fdsn) {
     thr.append("th").text("Run Tests");
     table.append("tbody");
   }
-  var tableData = table.select("tbody")
+  let tableData = table.select("tbody")
     .selectAll("tr")
     .data(fdsn.datacenters);
   tableData.exit().remove();
 
-  var tr = tableData.enter().append("tr").attr("class", function(dc) {return dc.id;});
+  let tr = tableData.enter().append("tr").attr("class", function(dc) {return dc.id;});
   
   tr.append("td")
     .append("a").attr("href", function(d) {
@@ -167,7 +167,7 @@ function makeTable(fdsn) {
     tr.append("td")
       .append(function(d) {
         if ( doesSupport(d, EV)) {
-          var aElement = document.createElement("a");
+          let aElement = document.createElement("a");
           d3.select(aElement)
             .attr("href", new fdsnevent.EventQuery()
                 .host(serviceHost(d, EV))
@@ -175,7 +175,7 @@ function makeTable(fdsn) {
             .text( "Yes" );
           return aElement;
         } else {
-          var spanElement = document.createElement("span");
+          let spanElement = document.createElement("span");
           d3.select(spanElement)
             .text( "No");
           return spanElement;
@@ -184,7 +184,7 @@ function makeTable(fdsn) {
     tr.append("td")
       .append(function(d) {
         if ( doesSupport(d, ST)) {
-          var aElement = document.createElement("a");
+          let aElement = document.createElement("a");
           d3.select(aElement)
             .attr("href", new fdsnstation.StationQuery()
                 .host(serviceHost(d, ST))
@@ -192,7 +192,7 @@ function makeTable(fdsn) {
             .text( "Yes" );
           return aElement;
         } else {
-          var spanElement = document.createElement("span");
+          let spanElement = document.createElement("span");
           d3.select(spanElement)
             .text( "No");
           return spanElement;
@@ -201,7 +201,7 @@ function makeTable(fdsn) {
   tr.append("td")
       .append(function(d) {
         if ( doesSupport(d, DS)) {
-          var aElement = document.createElement("a");
+          let aElement = document.createElement("a");
           d3.select(aElement)
             .attr("href", new fdsndataselect.DataSelectQuery()
                 .host(serviceHost(d, DS))
@@ -209,7 +209,7 @@ function makeTable(fdsn) {
             .text( "Yes" );
           return aElement;
         } else {
-          var spanElement = document.createElement("span");
+          let spanElement = document.createElement("span");
           d3.select(spanElement)
             .text( "No");
           return spanElement;
@@ -224,15 +224,15 @@ function makeTable(fdsn) {
 }
 
 function makeResultsTable(dc, inTests) {
-  var div = d3.select("div.results");
+  let div = d3.select("div.results");
   div.selectAll("*").remove();
-  var divP = div.append("h3");
+  let divP = div.append("h3");
   divP.text("Results for ");
   divP.append("a").attr("href", dc.url).text(dc.name);
-  var table = div.select("table");
+  let table = div.select("table");
   if ( table.empty()) {
     table = d3.select(".results").append("table");
-    var thr = table.append("thead").append("tr");
+    let thr = table.append("thead").append("tr");
     thr.append("th").text("Result");
     thr.append("th").text("Test Name");
     thr.append("th").text("Service");
@@ -242,7 +242,7 @@ function makeResultsTable(dc, inTests) {
     table.append("tbody");
   }
 
-  var allTests = inTests.fdsnEventTests.concat(inTests.fdsnStationTests).concat(inTests.fdsnDataTests);
+  let allTests = inTests.fdsnEventTests.concat(inTests.fdsnStationTests).concat(inTests.fdsnDataTests);
 
   allTests = allTests.filter(function(test) {
     return test.webservices.reduce(function(acc, wsType) {
@@ -250,11 +250,11 @@ function makeResultsTable(dc, inTests) {
     }, true);
   });
 
-  var tableData = table.select("tbody")
+  let tableData = table.select("tbody")
     .selectAll("tr")
     .data(allTests);
   tableData.exit().remove();
-  var tr = tableData.enter().append("tr").attr("class", function(test) {return test.testid;});
+  let tr = tableData.enter().append("tr").attr("class", function(test) {return test.testid;});
   tr.append("td").attr("class", "testresult");
   tr.append("td").append("span").text(function(test) {
        return test.testname;
@@ -271,22 +271,22 @@ function makeResultsTable(dc, inTests) {
 
 function runAllTests(fdsn, dcid) {
 // loop dc and tests...
-  var dc = fdsn.datacenters.find(function(dc) {
+  let dc = fdsn.datacenters.find(function(dc) {
     return dc.id === dcid;
   });
   makeResultsTable(dc, allFdsnTests);
-  var dcTests = fdsn.datacenters
+  let dcTests = fdsn.datacenters
     .filter(function(dc) {
       return dc.id === dcid;
     }).map(function(dc) {
-    var combinedTests = { dc: dc };
-    var initEVTest = new RSVP.Promise(function(resolve) {
+    let combinedTests = { dc: dc };
+    let initEVTest = new RSVP.Promise(function(resolve) {
        resolve(true);
     });
-    var initSTTest = new RSVP.Promise(function(resolve) {
+    let initSTTest = new RSVP.Promise(function(resolve) {
        resolve(true);
     });
-    var initDSTest = new RSVP.Promise(function(resolve) {
+    let initDSTest = new RSVP.Promise(function(resolve) {
        resolve(true);
     });
 
@@ -294,7 +294,7 @@ function runAllTests(fdsn, dcid) {
       combinedTests.fdsnevent = allFdsnTests.fdsnEventTests.reduce(function(acc, test) {
         return acc.then(function(prevResult) {
           if (prevResult) {
-            var sel = selectionForTestDC(test, dc);
+            let sel = selectionForTestDC(test, dc);
             sel.append("span").text("Run");
             return runTestOnDC(test, dc, EV);
           } else {
@@ -307,7 +307,7 @@ function runAllTests(fdsn, dcid) {
        combinedTests.fdsnstation = allFdsnTests.fdsnStationTests.reduce(function(acc, test) {
         return acc.then(function(prevResult) {
           if (prevResult) {
-            var sel = selectionForTestDC(test, dc);
+            let sel = selectionForTestDC(test, dc);
             sel.append("span").text("Run");
             return runTestOnDC(test, dc, ST);
           } else {
@@ -320,7 +320,7 @@ function runAllTests(fdsn, dcid) {
       combinedTests.fdsndataselect = allFdsnTests.fdsnDataTests.reduce(function(acc, test) {
         return acc.then(function(prevResult) {
           if (prevResult) {
-            var sel = selectionForTestDC(test, dc);
+            let sel = selectionForTestDC(test, dc);
             sel.append("span").text("Run");
             return runTestOnDC(test, dc, DS);
           } else {
@@ -348,9 +348,9 @@ RSVP.all(dcTests.map(function(dcT) { return RSVP.hash(dcT);}))
 }
 
 function doesSupport(dc, type) {
-  var out = dc.supports.find(function(s) { return s.type === type;});
+  let out = dc.supports.find(function(s) { return s.type === type;});
 //  if (! out) {
-//    var dcws = dc.supports.map(function(d) { return d.type; }).join(',');
+//    let dcws = dc.supports.map(function(d) { return d.type; }).join(',');
 //    console.log("not doesSupport "+dc.id+" "+dcws+" "+type+" undef");
 //  }
   return typeof out != 'undefined';
@@ -358,7 +358,7 @@ function doesSupport(dc, type) {
 }
 
 function serviceHost(dc, type) {
-  var does = doesSupport(dc, type);
+  let does = doesSupport(dc, type);
   if (does) {
     return does.host ? does.host : dc.host;
   }
