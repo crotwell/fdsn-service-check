@@ -1,35 +1,35 @@
 
 // big function to corral everything
-var allFdsnTests = function() {
+let allFdsnTests = function() {
 
 
 // seisplotjs comes from the seisplotjs standalone bundle
-var fdsnevent = seisplotjs.fdsnevent;
-var fdsnstation = seisplotjs.fdsnstation;
-var fdsndataselect = seisplotjs.fdsndataselect;
-var RSVP = fdsnstation.RSVP;
+let fdsnevent = seisplotjs.fdsnevent;
+let fdsnstation = seisplotjs.fdsnstation;
+let fdsndataselect = seisplotjs.fdsndataselect;
+let RSVP = fdsnstation.RSVP;
 
 
-var DS = "fdsnws-dataselect";
-var EV = "fdsn-event";
-var ST = "fdsn-station";
+let DS = "fdsnws-dataselect";
+let EV = "fdsn-event";
+let ST = "fdsn-station";
 
 
 
 // all tests should be object with testid, testname and test: function(datacenter, d3selector)
 
-var testEventVersion = {
+let testEventVersion = {
   testname: "Event Version",
   testid: "eventversion",
   description: "Queries the version of the service, success as long as the query returns something",
   webservices: [ EV ],
   severity: 'severe',
   test: function(dc) {
-    var host = serviceHost(dc, EV);
+    let host = serviceHost(dc, EV);
 
-    var quakeQuery = new fdsnevent.EventQuery()
+    let quakeQuery = new fdsnevent.EventQuery()
       .host(host);
-    var url = quakeQuery.formVersionURL();
+    let url = quakeQuery.formVersionURL();
     return quakeQuery.queryVersion().then(function(version) {
       return {
         text: version,
@@ -44,18 +44,18 @@ var testEventVersion = {
 };
 
 
-var testStationVersion = {
+let testStationVersion = {
   testname: "Station Version",
   testid: "stationversion",
   description: "Queries the version of the service, success as long as the query returns something",
   webservices: [ ST ],
   severity: 'severe',
   test: function(dc) {
-    var host = serviceHost(dc, ST);
+    let host = serviceHost(dc, ST);
 
-    var query = new fdsnstation.StationQuery()
+    let query = new fdsnstation.StationQuery()
       .host(host);
-    var url = query.formVersionURL();
+    let url = query.formVersionURL();
     return query.queryVersion().then(function(version) {
       return {
         text: version,
@@ -69,18 +69,18 @@ var testStationVersion = {
   }
 };
 
-var testDataSelectVersion = {
+let testDataSelectVersion = {
   testname: "DataSelect Version",
   testid: "dataselectversion",
   description: "Queries the version of the service, success as long as the query returns something",
   webservices: [ DS ],
   severity: 'severe',
   test: function(dc) {
-    var host = serviceHost(dc, DS);
+    let host = serviceHost(dc, DS);
 
-    var query = new fdsndataselect.DataSelectQuery()
+    let query = new fdsndataselect.DataSelectQuery()
       .host(host);
-    var url = query.formVersionURL();
+    let url = query.formVersionURL();
     return query.queryVersion().then(function(version) {
       return {
         text: version,
@@ -94,7 +94,7 @@ var testDataSelectVersion = {
   }
 };
 
-var testNoData204Event = {
+let testNoData204Event = {
   testname: "Event 204",
   testid: "nodata204event",  description: "Check that 204 is returned for queries for events that should be valid but return no data without nodata=404. Success if 204 http status is returned. This can also be a check on the CORS header.",
   webservices: [ EV ],
@@ -107,14 +107,14 @@ var testNoData204Event = {
       resolve(null);
     }
    }).then(function() {
-    var daysAgo = 1;
-    var host = serviceHost(dc, EV);
-    var quakeQuery = new fdsnevent.EventQuery()
+    let daysAgo = 1;
+    let host = serviceHost(dc, EV);
+    let quakeQuery = new fdsnevent.EventQuery()
       .host(host)
       .startTime(new Date(new Date().getTime()-86400*daysAgo*1000))
       .endTime(new Date())
       .minMag(99);
-    var url = quakeQuery.formURL();
+    let url = quakeQuery.formURL();
     return new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();
         client.open("GET", url);
@@ -137,7 +137,7 @@ var testNoData204Event = {
                   output: 204
                 });
             } else {
-              var error = new Error("Unexpected http status code: "+this.status);
+              let error = new Error("Unexpected http status code: "+this.status);
               error.status = this.status;
               error.statusText = this.statusText;
               reject(error);
@@ -152,7 +152,7 @@ var testNoData204Event = {
   }
 };
 
-var testNoDataEvent = {
+let testNoDataEvent = {
   testname: "NoData Event",
   testid: "nodataevent",
   description: "Queries for events that should be valid but return no data. Success if nothing is returned. This can also be a check on the CORS header.",
@@ -166,14 +166,14 @@ var testNoDataEvent = {
       resolve(null);
     }
    }).then(function() {
-    var daysAgo = 1;
-    var host = serviceHost(dc, EV);
-    var quakeQuery = new fdsnevent.EventQuery()
+    let daysAgo = 1;
+    let host = serviceHost(dc, EV);
+    let quakeQuery = new fdsnevent.EventQuery()
       .host(host)
       .startTime(new Date(new Date().getTime()-86400*daysAgo*1000))
       .endTime(new Date())
       .minMag(99);
-    var url = quakeQuery.formURL();
+    let url = quakeQuery.formURL();
     return quakeQuery.query().then(function(quakes) {
       if (quakes.length > 0) {
         throw new Error("Should be no data, but "+quakes.length+" events.");
@@ -192,7 +192,7 @@ var testNoDataEvent = {
   }
 };
 
-var testLastDay = {
+let testLastDay = {
   testname: "Last Day",
   testid: "lastday",
   description: "Queries for events in the past 24 hours",
@@ -206,13 +206,13 @@ var testLastDay = {
       resolve(null);
     }
    }).then(function() { 
-    var daysAgo = 1;
-    var host = serviceHost(dc, EV);
-    var quakeQuery = new fdsnevent.EventQuery()
+    let daysAgo = 1;
+    let host = serviceHost(dc, EV);
+    let quakeQuery = new fdsnevent.EventQuery()
       .host(host)
       .startTime(new Date(new Date().getTime()-86400*daysAgo*1000))
       .endTime(new Date());
-    var url = quakeQuery.formURL();
+    let url = quakeQuery.formURL();
     return quakeQuery.query().then(function(quakes) {
       return {
         text: "Found "+quakes.length,
@@ -228,7 +228,7 @@ var testLastDay = {
 };
 
 
-var testLastDayQueryWithZ = {
+let testLastDayQueryWithZ = {
   testname: "Last Day Query With Z",
   testid: "eventqueryZ",
   description: "Queries for events in the past 24 hours using a time that ends with Z",
@@ -242,13 +242,13 @@ var testLastDayQueryWithZ = {
       resolve(null);
     }
    }).then(function() {
-    var daysAgo = 1;
-    var host = serviceHost(dc, EV);
-    var quakeQuery = new fdsnevent.EventQuery()
+    let daysAgo = 1;
+    let host = serviceHost(dc, EV);
+    let quakeQuery = new fdsnevent.EventQuery()
       .host(host)
       .startTime(new Date(Date.parse('2017-01-01T12:34:56.789')))
       .endTime(new Date(Date.parse('2017-01-05T00:00:00.000')));
-    var url = quakeQuery.formURL().replace('.789', '.789Z').replace('.000', '.000Z');
+    let url = quakeQuery.formURL().replace('.789', '.789Z').replace('.000', '.000Z');
     return new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();
         client.open("GET", url);
@@ -270,7 +270,7 @@ var testLastDayQueryWithZ = {
             } else if (this.status === 400 ) {
               reject(new Error("Bad request, "+this.status));
             } else {
-              var error = new Error("Unexpected http status code: "+this.status);
+              let error = new Error("Unexpected http status code: "+this.status);
               error.status = this.status;
               error.statusText = this.statusText;
               reject(error);
@@ -285,7 +285,7 @@ var testLastDayQueryWithZ = {
   }
 };
 
-var testEventCrossDateLine = {
+let testEventCrossDateLine = {
   testname: "Cross Date Line",
   testid: "eventcrossdate",
   description: "Queries for events in a region that crosses the date line, ie minlon > maxlon",
@@ -299,9 +299,9 @@ var testEventCrossDateLine = {
       resolve(null);
     }
    }).then(function() {
-    var daysAgo = 1;
-    var host = serviceHost(dc, EV);
-    var quakeQuery = new fdsnevent.EventQuery()
+    let daysAgo = 1;
+    let host = serviceHost(dc, EV);
+    let quakeQuery = new fdsnevent.EventQuery()
       .host(host)
       .startTime(new Date(Date.parse('2017-01-01T12:34:56.789')))
       .endTime(new Date(Date.parse('2017-01-05T00:00:00.000')))
@@ -309,7 +309,7 @@ var testEventCrossDateLine = {
       .maxLat(20)
       .minLon(170)
       .maxLon(-170);
-    var url = quakeQuery.formURL();
+    let url = quakeQuery.formURL();
     return new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();
         client.open("GET", url);
@@ -330,7 +330,7 @@ var testEventCrossDateLine = {
             } else if (this.status === 400 ) {
               reject(new Error("Bad request, "+this.status));
             } else {
-              var error = new Error("Unexpected http status code: "+this.status);
+              let error = new Error("Unexpected http status code: "+this.status);
               error.status = this.status;
               error.statusText = this.statusText;
               reject(error);
@@ -346,7 +346,7 @@ var testEventCrossDateLine = {
 };
 
 
-var testDateIncludeZ = {
+let testDateIncludeZ = {
   testname: "Date Ends w/ Z",
   testid: "eventdataZ",
   description: "Queries for events in the past 24 hours and checks that the origin time string ends with a Z for UTC timezone.",
@@ -360,20 +360,20 @@ var testDateIncludeZ = {
         resolve(null);
       }
     }).then(function() {
-      var daysAgo = 1;
-      var host = serviceHost(dc, EV);
-      var quakeQuery = new fdsnevent.EventQuery()
+      let daysAgo = 1;
+      let host = serviceHost(dc, EV);
+      let quakeQuery = new fdsnevent.EventQuery()
         .host(host)
         .startTime(new Date(new Date().getTime()-86400*daysAgo*1000))
         .endTime(new Date());
-      var url = quakeQuery.formURL();
+      let url = quakeQuery.formURL();
       return quakeQuery.queryRawXml().then(function(qml) {
         let top = qml.documentElement;
         let eventArray = Array.prototype.slice.call(top.getElementsByTagName("event"));
         if (eventArray.length === 0) {
           throw new Error("No events returned");
         }
-        var failureEvent = null;
+        let failureEvent = null;
         let otimeStr = null;
         if (eventArray.every(function(q, i) {
           otimeStr = quakeQuery._grabFirstElText(quakeQuery._grabFirstEl(quakeQuery._grabFirstEl(qml, 'origin'), 'time'),'value');
@@ -385,7 +385,7 @@ var testDateIncludeZ = {
               return false;
             }
           } else {
-            var err = new Error("origintime is missing for "+i+"th event: "+q.getAttribute("publicID"));
+            let err = new Error("origintime is missing for "+i+"th event: "+q.getAttribute("publicID"));
             err.url = url;
             throw err;
           }
@@ -408,7 +408,7 @@ var testDateIncludeZ = {
 };
 
 
-var testEventFromPublicID = {
+let testEventFromPublicID = {
   testname: "eventid=publicID",
   testid: "eventid_publicid",
   description: "Queries events in the past 24 hours, then tries to make an eventid= query for the first event using its entire publicID with no modification. This allows a client to do a general then specific query style. Because the spec is ambiguous on the relationship between piblicID and eventid, this may be an unfair test, but I feel it is useful for the service to accept as eventid whatever it outputs as publicID.",
@@ -422,18 +422,18 @@ var testEventFromPublicID = {
         resolve(null);
       }
    }).then(function() {
-    var daysAgo = .5;
-    var host = serviceHost(dc, EV);
-    var quakeQuery = new fdsnevent.EventQuery()
+    let daysAgo = .5;
+    let host = serviceHost(dc, EV);
+    let quakeQuery = new fdsnevent.EventQuery()
       .host(host)
       .startTime(new Date(new Date().getTime()-86400*daysAgo*1000))
       .endTime(new Date());
-    var url = quakeQuery.formURL();
+    let url = quakeQuery.formURL();
     return quakeQuery.query().then(function(quakes) {
         if (quakes.length == 0) {
           throw new Error("No quakes returned");
         }
-        var singleQuakeQuery = new fdsnevent.EventQuery()
+        let singleQuakeQuery = new fdsnevent.EventQuery()
           .host(host)
           .eventid(encodeURIComponent(quakes[0].publicID));
         url = singleQuakeQuery.formURL();
@@ -456,16 +456,16 @@ var testEventFromPublicID = {
   }
 };
 
-var testEventFromBestGuessEventId = {
+let testEventFromBestGuessEventId = {
   testname: "Best Guess EventId",
   testid: "guesseventid",
   description: "Queries events in the past 24 hours, then tries to make an eventid= query for the first event using a huristic to determine the eventid. This allows a client to do a general then specific query style, but with more effort than eventid=publicID as the client must guess the value for eventid in the specific query. This is also fragile as the huristic must be updated for each new server.",
   webservices: [ EV ],
   severity: 'severe',
   test: function(dc) {
-    var url = "none";
-    var daysAgo = .5;
-    var host = serviceHost(dc, EV);
+    let url = "none";
+    let daysAgo = .5;
+    let host = serviceHost(dc, EV);
     return new RSVP.Promise(function(resolve, reject) {
       if ( ! doesSupport(dc, EV) ) {
         reject(new Error("Unsupported"));
@@ -474,7 +474,7 @@ var testEventFromBestGuessEventId = {
         resolve(host);
       }
     }).then(function(host) {
-      var quakeQuery = new fdsnevent.EventQuery()
+      let quakeQuery = new fdsnevent.EventQuery()
         .host(host)
         .startTime(new Date(new Date().getTime()-86400*daysAgo*1000))
         .endTime(new Date());
@@ -484,7 +484,7 @@ var testEventFromBestGuessEventId = {
         if (quakes.length == 0) {
           throw new Error("No quakes returned");
         }
-        var singleQuakeQuery = new fdsnevent.EventQuery()
+        let singleQuakeQuery = new fdsnevent.EventQuery()
           .host(host)
           .eventid(encodeURIComponent(quakes[0].eventid()));
         url = singleQuakeQuery.formURL();
@@ -502,7 +502,7 @@ var testEventFromBestGuessEventId = {
   }
 };
 
-var testCatalogs = {
+let testCatalogs = {
   testname: "Catalogs",
   testid: "catalogs",
   description: "Queries the list of catalogs of the event service, success as long as the query returns something",
@@ -516,10 +516,10 @@ var testCatalogs = {
       resolve(null);
     }
    }).then(function() {
-    var host = serviceHost(dc, EV);
-    var quakeQuery = new fdsnevent.EventQuery()
+    let host = serviceHost(dc, EV);
+    let quakeQuery = new fdsnevent.EventQuery()
       .host(host);
-    var url = quakeQuery.formCatalogsURL();
+    let url = quakeQuery.formCatalogsURL();
     return quakeQuery.queryCatalogs().then(function(catalogs) {
       return {
         text: "Found "+catalogs.length,
@@ -534,7 +534,7 @@ var testCatalogs = {
   }
 };
 
-var testContributors = {
+let testContributors = {
   testname: "Contributors",
   testid: "contributors",
   description: "Queries the list of contributors of the event service, success as long as the query returns something",
@@ -548,10 +548,10 @@ var testContributors = {
       resolve(null);
     }
    }).then(function() {
-    var host = serviceHost(dc, EV);
-    var quakeQuery = new fdsnevent.EventQuery()
+    let host = serviceHost(dc, EV);
+    let quakeQuery = new fdsnevent.EventQuery()
       .host(host);
-    var url = quakeQuery.formContributorsURL();
+    let url = quakeQuery.formContributorsURL();
     return quakeQuery.queryContributors().then(function(contributors) {
       return {
         text: "Found "+contributors.length,
@@ -566,7 +566,7 @@ var testContributors = {
   }
 };
 
-var testNoData204Station = {
+let testNoData204Station = {
   testname: "Station 204",
   testid: "nodata204Station",  description: "Check that 204 is returned for queries for networks that should be valid but return no data, without nodata=404. Success if 204 http status is returned. This can also be a check on the CORS header.",
   webservices: [ ST ],
@@ -579,11 +579,11 @@ var testNoData204Station = {
       resolve(null);
     }
    }).then(function() {
-    var host = serviceHost(dc, ST);
-    var query = new fdsnstation.StationQuery()
+    let host = serviceHost(dc, ST);
+    let query = new fdsnstation.StationQuery()
       .host(host)
       .networkCode("xx");
-    var url = query.formURL(fdsnstation.LEVEL_NETWORK);
+    let url = query.formURL(fdsnstation.LEVEL_NETWORK);
     return new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();
         client.open("GET", url);
@@ -606,7 +606,7 @@ var testNoData204Station = {
                   output: 204
                 });
             } else {
-              var error = new Error("Unexpected http status code: "+this.status);
+              let error = new Error("Unexpected http status code: "+this.status);
               error.status = this.status;
               error.statusText = this.statusText;
               reject(error);
@@ -621,7 +621,7 @@ var testNoData204Station = {
   }
 };
 
-var testNoDataNetwork = {
+let testNoDataNetwork = {
   testname: "NoData Networks",
   testid: "nodatanetworks",
   description: "Queries for networks that should be well formed but return no networks, success as long as the query returns something, even an empty result. This can also be a check on the CORS header.",
@@ -635,12 +635,12 @@ var testNoDataNetwork = {
       resolve(null);
     }
    }).then(function() {
-    var host = serviceHost(dc, ST);
+    let host = serviceHost(dc, ST);
   
-    var query = new fdsnstation.StationQuery()
+    let query = new fdsnstation.StationQuery()
       .host(host)
       .networkCode("xx");
-    var url = query.formURL(fdsnstation.LEVEL_NETWORK);
+    let url = query.formURL(fdsnstation.LEVEL_NETWORK);
     return query.queryNetworks().then(function(networks) {
       if (networks.length > 0) {
         throw new Error("Should be no data, but "+networks.length+" networks.");
@@ -659,7 +659,7 @@ var testNoDataNetwork = {
   }
 };
 
-var testNetworks = {
+let testNetworks = {
   testname: "Networks",
   testid: "networks",
   description: "Queries for all networks, success as long as the query returns something, even an empty result.",
@@ -673,10 +673,10 @@ var testNetworks = {
       resolve(null);
     }
    }).then(function() { 
-    var host = serviceHost(dc, ST);
-    var query = new fdsnstation.StationQuery()
+    let host = serviceHost(dc, ST);
+    let query = new fdsnstation.StationQuery()
       .host(host);
-    var url = query.formURL(fdsnstation.LEVEL_NETWORK);
+    let url = query.formURL(fdsnstation.LEVEL_NETWORK);
     return query.queryNetworks().then(function(networks) {
       return {
         text: "Found "+networks.length,
@@ -692,42 +692,42 @@ var testNetworks = {
 };
 
 function randomNetwork(dc, startTime) {
-  var host = serviceHost(dc, ST);
-  var query = new fdsnstation.StationQuery()
+  let host = serviceHost(dc, ST);
+  let query = new fdsnstation.StationQuery()
       .host(host);
   if (startTime) {
     query.startTime(startTime);
   }
-  var url = query.formURL(fdsnstation.LEVEL_NETWORK);
+  let url = query.formURL(fdsnstation.LEVEL_NETWORK);
   return query.queryNetworks().then(function(networks) {
     if (networks.length == 0) {
-      var err = new Error("No networks");
+      let err = new Error("No networks");
       err.url = url;
       throw err;
     }
     // got some nets
-    var permNetRE = /[A-W][A-Z0-9]/;
-    var unrestricted = networks.filter(function(net) {
+    let permNetRE = /[A-W][A-Z0-9]/;
+    let unrestricted = networks.filter(function(net) {
       return  (( ! net.restrictedStatus()) || net.restrictedStatus() == "open")
              && permNetRE.test(net.networkCode());
     });
     if (unrestricted.length == 0) {
-      var errRestricted = new Error("No unrestricted networks");
+      let errRestricted = new Error("No unrestricted networks");
       errRestricted.url = url;
       throw errRestricted;
     }
-    var withStations = unrestricted.filter(function(net) {
+    let withStations = unrestricted.filter(function(net) {
              return ( typeof net.totalNumberStations === "undefined" 
                 || !net.totalNumberStations
                 ||  net.totalNumberStations > 1);
     });
     if (withStations.length == 0) {
-      var errNoSta = new Error("No networks with stations");
+      let errNoSta = new Error("No networks with stations");
       errNoSta.url = url;
       throw errNoSta;
     }
-    var i = Math.floor(Math.random()*withStations.length);
-    var net = withStations[i];
+    let i = Math.floor(Math.random()*withStations.length);
+    let net = withStations[i];
     net.url = url;
     return net;
   }).catch(function(err) {
@@ -738,36 +738,36 @@ function randomNetwork(dc, startTime) {
 
 
 function randomStation(dc, netCode, startTime) {
-  var host = serviceHost(dc, ST);
-  var query = new fdsnstation.StationQuery()
+  let host = serviceHost(dc, ST);
+  let query = new fdsnstation.StationQuery()
       .host(host)
       .networkCode(netCode);
   if (startTime) {
     query.startTime(startTime);
   }
-  var url = query.formURL(fdsnstation.LEVEL_STATION);
+  let url = query.formURL(fdsnstation.LEVEL_STATION);
   return query.queryStations().then(function(networks) {
     if (networks.length == 0) {
-      var err = new Error("No networks");
+      let err = new Error("No networks");
       err.url = url;
       throw err;
     }
     if (networks[0].stations().length == 0) {
-      var errNoSta = new Error("No stations in network "+networks[0].networkCode());
+      let errNoSta = new Error("No stations in network "+networks[0].networkCode());
       errNoSta.url = url;
       throw errNoSta;
     }
     // got some stations in first net
-    var unrestricted = networks[0].stations().filter(function(net) {
+    let unrestricted = networks[0].stations().filter(function(net) {
       return ( ! net.restrictedStatus()) || net.restrictedStatus() == "open";
     });
     if (unrestricted.length == 0) {
-      var errRestricted = new Error("No unrestricted stations in "+networks[0].networkCode());
+      let errRestricted = new Error("No unrestricted stations in "+networks[0].networkCode());
       errRestricted.url = url;
       throw errRestricted;
     }
-    var i = Math.floor(Math.random()*unrestricted.length);
-    var sta = unrestricted[i];
+    let i = Math.floor(Math.random()*unrestricted.length);
+    let sta = unrestricted[i];
     sta.url = url;
     return sta;
   }).catch(function(err) {
@@ -778,7 +778,7 @@ function randomStation(dc, netCode, startTime) {
 
 
 
-var testStations = {
+let testStations = {
   testname: "Stations",
   testid: "stations",
   description: "Queries for stations within a random unrestricted network returned from all networks, success as long as the query returns something, even an empty result.",
@@ -805,14 +805,14 @@ var testStations = {
   }
 };
 
-var testCommaStations = {
+let testCommaStations = {
   testname: "Comma Stations",
   testid: "commastations",
   description: "Queries for two station codes separated by comma from within a random unrestricted network returned from all networks, success as long as the query returns at least two stations.",
   webservices: [ ST ],
   severity: 'severe',
   test: function(dc) {
-    var host = serviceHost(dc, ST);
+    let host = serviceHost(dc, ST);
     return new RSVP.Promise(function(resolve, reject) {
       if ( ! doesSupport(dc, ST) ) {
         reject(new Error("Unsupported"));
@@ -822,18 +822,18 @@ var testCommaStations = {
     }).then(function() {
       return randomNetwork(dc);
     }).then(function(net) {
-      var query = new fdsnstation.StationQuery()
+      let query = new fdsnstation.StationQuery()
         .host(host)
         .networkCode(net.networkCode());   
-      var url = query.formURL(fdsnstation.LEVEL_STATION);
+      let url = query.formURL(fdsnstation.LEVEL_STATION);
       return query.queryStations().then(function(networks) {
         if (networks.length === 0) {
-          var noNetErr = new Error("No networks returned");
+          let noNetErr = new Error("No networks returned");
           noNetErr.url = url;
           throw noNetErr;
         }
         if (networks[0].stations().length < 2) {
-          var notTwoStaErr = new Error("can't test as not at least two stations returned: "+networks[0].stations().length);
+          let notTwoStaErr = new Error("can't test as not at least two stations returned: "+networks[0].stations().length);
           notTwoStaErr.url = url;
           throw notTwoStaErr;
         }
@@ -841,27 +841,27 @@ var testCommaStations = {
         return networks[0];
       });
     }).then(function(net) {
-      var firstCode = net.stations()[0].stationCode();
-      var secondCode = firstCode;
-      for (var i=0; i<net.stations().length; i++) {
+      let firstCode = net.stations()[0].stationCode();
+      let secondCode = firstCode;
+      for (let i=0; i<net.stations().length; i++) {
         if (net.stations()[i].stationCode() != firstCode) {
           secondCode = net.stations()[i].stationCode();
           break;
         }
       }
-      var query = new fdsnstation.StationQuery()
+      let query = new fdsnstation.StationQuery()
         .host(host)
         .networkCode(net.networkCode())
         .stationCode(firstCode+","+secondCode);
-      var url = query.formURL(fdsnstation.LEVEL_STATION);
+      let url = query.formURL(fdsnstation.LEVEL_STATION);
       return query.queryStations().then(function(networks) {
         if (networks.length === 0) {
-          var noNetErr = new Error("No networks returned");
+          let noNetErr = new Error("No networks returned");
           noNetErr.url = url;
           throw noNetErr;
         }
         if (networks[0].stations().length < 2) {
-          var notTwoStaErr = new Error("Not at least two stations returned for "+net.networkCode+": "+networks[0].stations().length);
+          let notTwoStaErr = new Error("Not at least two stations returned for "+net.networkCode+": "+networks[0].stations().length);
           notTwoStaErr.url = url;
           throw notTwoStaErr;
         }
@@ -880,7 +880,7 @@ function dateStrEndsZ(s) {
   return s.charAt(s.length-1) === 'Z';
 }
 
-var testStationQueryWithZ = {
+let testStationQueryWithZ = {
   testname: "Starttime Query With Z",
   testid: "stationqueryZ",
   description: "Queries for stations with starttime of 2016-01-01 using a time that ends with Z",
@@ -894,12 +894,12 @@ var testStationQueryWithZ = {
       resolve(null);
     }
    }).then(function() {
-    var host = serviceHost(dc, ST);
-    var query = new fdsnstation.StationQuery()
+    let host = serviceHost(dc, ST);
+    let query = new fdsnstation.StationQuery()
       .host(host)
       .startTime(new Date(Date.parse('2016-01-01T12:34:56.789')))
       .endTime(new Date(Date.parse('2016-02-01T00:00:00.000')));
-    var url = query.formURL(fdsnstation.LEVEL_STATION).replace('.789', '.789Z').replace('.000', '.000Z');
+    let url = query.formURL(fdsnstation.LEVEL_STATION).replace('.789', '.789Z').replace('.000', '.000Z');
     return new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();
         client.open("GET", url);
@@ -917,7 +917,7 @@ var testStationQueryWithZ = {
             } else if (this.status === 400 ) {
               reject(new Error("Bad request, "+this.status));
             } else {
-              var error = new Error("Unexpected http status code: "+this.status);
+              let error = new Error("Unexpected http status code: "+this.status);
               error.status = this.status;
               error.statusText = this.statusText;
               reject(error);
@@ -939,14 +939,14 @@ var testStationQueryWithZ = {
 };
 
 
-var testStationDateIncludeZ = {
+let testStationDateIncludeZ = {
   testname: "Station Date Ends w/ Z",
   testid: "stationdataZ",
   description: "Queries for stations in random network and checks that the start and end time string ends with a Z for UTC timezone.",
   webservices: [ ST ],
   severity: 'opinion',
   test: function(dc) {
-    var host = serviceHost(dc, ST);
+    let host = serviceHost(dc, ST);
     return new RSVP.Promise(function(resolve, reject) {
       if ( ! doesSupport(dc, ST) ) {
         reject(new Error("Unsupported"));
@@ -956,7 +956,7 @@ var testStationDateIncludeZ = {
     }).then(function() {
       return randomNetwork(dc);
     }).then(function(net) {
-      var query = new fdsnstation.StationQuery()
+      let query = new fdsnstation.StationQuery()
         .host(host)
         .networkCode(net.networkCode());
       return query.queryRawXml(fdsnstation.LEVEL_STATION);
@@ -992,7 +992,7 @@ var testStationDateIncludeZ = {
   }
 };
 
-var testStationCrossDateLine = {
+let testStationCrossDateLine = {
   testname: "Station Cross Date Line",
   testid: "stationcrossdate",
   description: "Queries for stations in a region that crosses the date line, ie minlon > maxlon",
@@ -1010,16 +1010,16 @@ var testStationCrossDateLine = {
     }).then(function(net) {
       return randomStation(dc, net.networkCode());
    }).then(function(randomStation) {
-    var host = serviceHost(dc, ST);
-      var query = new fdsnstation.StationQuery()
-    var stationQuery = new fdsnstation.StationQuery();
+    let host = serviceHost(dc, ST);
+      let query = new fdsnstation.StationQuery()
+    let stationQuery = new fdsnstation.StationQuery();
       stationQuery.host(host)
       .networkCode(randomStation.network().networkCode())
       .minLat(randomStation.latitude()-1)
       .maxLat(randomStation.latitude()+1)
       .minLon(randomStation.longitude()-1)
       .maxLon(-179);
-    var url = stationQuery.formURL(fdsnstation.LEVEL_STATION);
+    let url = stationQuery.formURL(fdsnstation.LEVEL_STATION);
     return new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();
         client.open("GET", url);
@@ -1042,7 +1042,7 @@ var testStationCrossDateLine = {
             } else if (this.status === 400 ) {
               reject(new Error("Bad request, "+this.status));
             } else {
-              var error = new Error("Unexpected http status code: "+this.status);
+              let error = new Error("Unexpected http status code: "+this.status);
               error.status = this.status;
               error.statusText = this.statusText;
               reject(error);
@@ -1057,7 +1057,7 @@ var testStationCrossDateLine = {
   }
 };
 
-var testChannels = {
+let testChannels = {
   testname: "Channels",
   testid: "channels",
   description: "Queries for channels from a random unrestricted station within a random network returned from all networks, success as long as the query returns something, even an empty result.",
@@ -1075,7 +1075,7 @@ var testChannels = {
     }).then(function(net) {
       return randomStation(dc, net.networkCode());
     }).then(function(sta) {
-      var chanQuery = new fdsnstation.StationQuery()
+      let chanQuery = new fdsnstation.StationQuery()
         .host(serviceHost(dc, ST))
         .networkCode(sta.network().networkCode())
         .stationCode(sta.stationCode());
@@ -1095,14 +1095,14 @@ var testChannels = {
 };
 
 
-var testSensitivityUnit = {
+let testSensitivityUnit = {
   testname: "Sensitvity units valid SI",
   testid: "sensitivityUnits",
   description: "Checks the units in the instrumentSensitivity against the validation list at https://github.com/iris-edu/StationXML-Validator/wiki/Unit-name-overview-for-IRIS-StationXML-validator",
   webservices: [ ST ],
   severity: 'opinion',
   test: function(dc) {
-    var host = serviceHost(dc, ST);
+    let host = serviceHost(dc, ST);
     return new RSVP.Promise(function(resolve, reject) {
       if ( ! doesSupport(dc, ST) ) {
         reject(new Error("Unsupported"));
@@ -1114,7 +1114,7 @@ var testSensitivityUnit = {
     }).then(function(net) {
       return randomStation(dc, net.networkCode(), new Date());
     }).then(function(station) {
-      var query = new fdsnstation.StationQuery()
+      let query = new fdsnstation.StationQuery()
         .host(host)
         .networkCode(station.network().networkCode())
         .stationCode(station.stationCode()) ;
@@ -1187,7 +1187,7 @@ console.log("Station: "+s.codes());
 
 
 
-var testNoData204DataSelect = {
+let testNoData204DataSelect = {
   testname: "DataSelect 204",
   testid: "nodata204DataSelect",  
   description: "Check that 204 is returned for queries for dataselect that should be valid but return no data without nodata=404. Success if 204 http status is returned. This can also be a check on the CORS header.",
@@ -1201,10 +1201,10 @@ var testNoData204DataSelect = {
       resolve(null);
     }
    }).then(function() {
-    var host = serviceHost(dc, DS);
-    var query = new fdsndataselect.DataSelectQuery()
+    let host = serviceHost(dc, DS);
+    let query = new fdsndataselect.DataSelectQuery()
       .host(host);
-    var url = query
+    let url = query
       .networkCode("XX")
       .stationCode("ABC")
       .locationCode("99")
@@ -1233,7 +1233,7 @@ var testNoData204DataSelect = {
                   output: 204
                 });
             } else {
-              var error = new Error("Unexpected http status code: "+this.status);
+              let error = new Error("Unexpected http status code: "+this.status);
               error.status = this.status;
               error.statusText = this.statusText;
               reject(error);
@@ -1248,7 +1248,7 @@ var testNoData204DataSelect = {
   }
 };
 
-var testDataSelectNoData = {
+let testDataSelectNoData = {
   testname: "No Data",
   testid: "dsnodata",
   description: "Attempts to make a dataselect query that should be correctly formed but should not return data. Success as long as the query returns, even with an empty result. This can also be a check on the CORS header.",
@@ -1262,11 +1262,11 @@ var testDataSelectNoData = {
       resolve(null);
     }
    }).then(function() {
-    var host = serviceHost(dc, DS);
+    let host = serviceHost(dc, DS);
 
-    var query = new fdsndataselect.DataSelectQuery()
+    let query = new fdsndataselect.DataSelectQuery()
       .host(host);
-    var url = query
+    let url = query
       .networkCode("XX")
       .stationCode("ABC")
       .locationCode("99")
@@ -1291,7 +1291,7 @@ var testDataSelectNoData = {
   }
 };
 
-var testDataSelectRecent = {
+let testDataSelectRecent = {
   testname: "Recent Data",
   testid: "recentData",
   description: "Attempts to make a dataselect query by first querying for networks, then stations within the a random network and then using a random station to request the last 300 seconds for a SHZ,BHZ channel. Success as long as the query returns, even with an empty result.",
@@ -1309,11 +1309,11 @@ var testDataSelectRecent = {
    }).then(function(net) {
      return randomStation(dc, net.networkCode(), new Date());
    }).then(function(station) {
-    var host = serviceHost(dc, DS);
+    let host = serviceHost(dc, DS);
 
-    var query = new fdsndataselect.DataSelectQuery()
+    let query = new fdsndataselect.DataSelectQuery()
       .host(host);
-    var url = query
+    let url = query
       .networkCode(station.network().networkCode())
       .stationCode(station.stationCode())
       .channelCode("SHZ,BHZ")
@@ -1336,29 +1336,29 @@ var testDataSelectRecent = {
 
 
 function doesSupport(dc, type) {
-  var out = dc.supports.find(function(s) { return s.type === type;});
+  let out = dc.supports.find(function(s) { return s.type === type;});
 //  if (! out) {
-//    var dcws = dc.supports.map(function(d) { return d.type; }).join(',');
+//    let dcws = dc.supports.map(function(d) { return d.type; }).join(',');
 //    console.log("not doesSupport "+dc.id+" "+dcws+" "+type+" undef");
 //  }
   return typeof out != 'undefined';
 }
 
 function serviceHost(dc, type) {
-  var does = doesSupport(dc, type);
+  let does = doesSupport(dc, type);
   if (does) {
     return does.host ? does.host : dc.host;
   }
   return null;
 }
 
-var tests = {
+let tests = {
      fdsnEventTests: [ testEventVersion, testNoData204Event, testNoDataEvent, testLastDay, testCatalogs, testContributors, testEventFromBestGuessEventId, testLastDayQueryWithZ, testDateIncludeZ, testEventCrossDateLine, testEventFromPublicID  ],
      fdsnStationTests: [ testStationVersion, testNoData204Station, testNoDataNetwork, testNetworks, testStations, testChannels, testCommaStations, testStationQueryWithZ, testStationDateIncludeZ, testStationCrossDateLine, testSensitivityUnit ],
      fdsnDataTests: [ testDataSelectVersion, testNoData204DataSelect, testDataSelectNoData, testDataSelectRecent ]
  };
 
-var notVersionTest = {
+let notVersionTest = {
      fdsnEventTests: tests.fdsnEventTests.filter(function(d) {
          return d.testid.indexOf("version") === -1;
      }),
@@ -1369,21 +1369,21 @@ var notVersionTest = {
          return d.testid.indexOf("version") === -1;
      })
  };
-var justOneTest = {
+let justOneTest = {
      fdsnEventTests: [ testEventFromBestGuessEventId,  testEventCrossDateLine],
      fdsnStationTests: [ testStationCrossDateLine ],
      fdsnDataTests: [ ]
 };
-var justVersionTest = {
+let justVersionTest = {
      fdsnEventTests: [ testEventVersion ],
      fdsnStationTests: [ testStationVersion ],
      fdsnDataTests: [ testDataSelectVersion ]
 };
 
-//var out = notVersionTest;
-//var out = justVersionTest;
-//var out = justOneTest;
-var out = tests;
+//let out = notVersionTest;
+//let out = justVersionTest;
+//let out = justOneTest;
+let out = tests;
 // util functions
 out.serviceHost = serviceHost;
 out.doesSupport = doesSupport;
