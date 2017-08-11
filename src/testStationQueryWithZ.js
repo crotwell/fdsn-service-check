@@ -1,6 +1,6 @@
 
 import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {DS, EV, ST, serviceHost, doesSupport, randomNetwork } from './util';
 
 let RSVP = fdsnstation.RSVP;
 
@@ -12,19 +12,27 @@ export let testStationQueryWithZ = {
   severity: 'opinion',
   test: function(dc) {
     return new RSVP.Promise(function(resolve, reject) {
-    if ( ! doesSupport(dc, ST) ) {
-      reject(new Error("Unsupported"));
-    } else {
-      resolve(null);
-    }
-   }).then(function() {
-    let host = serviceHost(dc, ST);
-    let query = new fdsnstation.StationQuery()
-      .host(host)
-      .startTime(new Date(Date.parse('2016-01-01T12:34:56.789')))
-      .endTime(new Date(Date.parse('2016-02-01T00:00:00.000')));
-    let url = query.formURL(fdsnstation.LEVEL_STATION).replace('.789', '.789Z').replace('.000', '.000Z');
-    return new Promise(function(resolve, reject) {
+      if ( ! doesSupport(dc, ST) ) {
+        reject(new Error("Unsupported"));
+      } else {
+        resolve(null);
+      }
+    }).then(function() {
+      return randomNetwork(dc);
+    }).then(function(net) {
+      let start = net.startDate();
+      start.setMilliseconds(789);
+      let end = net.endDate() ? net.endDate() : new Date();
+      end.setMilliseconds(789);
+      let host = serviceHost(dc, ST);
+      let query = new fdsnstation.StationQuery()
+        .host(host)
+        .networkCode(net.networkCode())
+        .startTime(start)
+        .endTime(new Date(new Date()));
+      // millis is 789, so replace with 789Z
+      let url = query.formURL(fdsnstation.LEVEL_STATION).replace('.789', '.789Z');
+      return new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();
         client.open("GET", url);
         client.onreadystatechange = handler;
