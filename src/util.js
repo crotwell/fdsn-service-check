@@ -5,6 +5,9 @@ let fdsnstation = seisplotjs.fdsnstation;
 let fdsndataselect = seisplotjs.fdsndataselect;
 let RSVP = fdsnstation.RSVP;
 
+export function findSupport(dc, type) {
+  return dc.supports.find(function(s) { return s.type === type;});
+}
 
 export function doesSupport(dc, type) {
   let out = dc.supports.find(function(s) { return s.type === type;});
@@ -16,7 +19,7 @@ export function doesSupport(dc, type) {
 }
 
 export function serviceHost(dc, type) {
-  let does = doesSupport(dc, type);
+  let does = findSupport(dc, type);
   if (does) {
     return does.host ? does.host : dc.host;
   }

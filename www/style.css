@@ -17,6 +17,12 @@
   color: white;
 }
 
+.unsupported {
+  padding: 3px;
+  background-color: white;
+  color: purple;
+}
+
 td span {
   min-width: 80px;
 }

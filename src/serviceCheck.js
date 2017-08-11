@@ -19,7 +19,9 @@ let fdsnDataCenters = null;
 d3.json('fdsnDataCenters.json', function(fdsn) {
   fdsnDataCenters = fdsn;
   makeTable(fdsn);
+  makeTestsTable(allFdsnTests, fdsn);
 });
+
 
 
 
@@ -36,9 +38,15 @@ d3.json('fdsnDataCenters.json', function(fdsn) {
 
 
 function selectionForTestDC(test, dc) {
-  let sel = d3.select("tr."+test.testid).select("td.testresult");
-  return sel;
+  let sel = d3.select("tr."+test.testid+"."+dc.id).select("td.testresult");
+  if ( sel && ! sel.empty()) {
+    return sel;
+  } else {
+    sel = d3.select("tr."+dc.id).select("td.testresult");
+    return sel;
+  }
 }
+
 
 function runTestOnDC(test, dc, DCType) {
   let testRunStart = performance.now();
@@ -50,6 +58,12 @@ console.log("RunTestOnDC: "+test.testname+" "+dc.id+" "+DCType+"  sup="+doesSupp
         text: UNSUPPORTED,
         url: "none"
       });
+    }).then(function(out) {
+      sel.selectAll("*").remove();
+      sel.append("span")
+          .attr("class", "unsupported")
+          .text("no impl");
+      return out;
     });
   }
   // dc type is supported
@@ -88,15 +102,15 @@ console.log("run "+test.testname+" on "+dc.id+" "+DCType);
           .attr("class", "success")
           .attr("href", testOut.url)
           .text("OK");
-      let messageSel = d3.select("tr."+test.testid).select("td.testmessage");
+      let messageSel = d3.select("tr."+test.testid+"."+dc.id).select("td.testmessage");
       messageSel.selectAll("*").remove();
       messageSel.append("span").text(testOut.text);
-      let runtimeSel = d3.select("tr."+test.testid).select("td.runtime");
+      let runtimeSel = d3.select("tr."+test.testid+"."+dc.id).select("td.runtime");
       runtimeSel.selectAll("*").remove();
       runtimeSel.append("span").text(Math.round(testOut.runtime)/1000);
       return testOut;
   }).catch(function(err) {
-      let messageSel = d3.select("tr."+test.testid).select("td.testmessage");
+      let messageSel = d3.select("tr."+test.testid+"."+dc.id).select("td.testmessage");
 console.log("catch in test='"+test.testname+"' on "+dc.id+" "+DCType);
 console.assert(false, err);
 if (err.url) {
@@ -138,6 +152,7 @@ console.log("error with no URL", err);
 
 function makeTable(fdsn) {
   let div = d3.select(".datacenters");
+  if ( ! div ) { return; }
   div.select("p").remove();
   let table = div.select("table");
   if ( table.empty()) {
@@ -226,6 +241,47 @@ function makeTable(fdsn) {
     });
 }
 
+function makeTestsTable(inTests, fdsn) {
+console.log("makeTestsTable: fdsn"+fdsn.datacenters.length);
+  let div = d3.select("div.testlist");
+  if ( ! div) { return; }
+  div.selectAll("*").remove();
+  let divP = div.append("h3");
+  divP.text("Tests");
+  let table = div.select("table");
+  if ( table.empty()) {
+    table = d3.select(".testlist").append("table");
+    let thr = table.append("thead").append("tr");
+    thr.append("th").text("Test Name");
+    thr.append("th").text("Service");
+    thr.append("th").text("Detail");
+    table.append("tbody");
+  }
+
+  let allTests = inTests.fdsnEventTests.concat(inTests.fdsnStationTests).concat(inTests.fdsnDataTests);
+
+  let tableData = table.select("tbody")
+    .selectAll("tr")
+    .data(allTests);
+  tableData.exit().remove();
+  let tr = tableData.enter().append("tr").attr("class", function(test) {return test.testid;});
+  tr.append("td").append("span").text(function(test) {
+       return test.testname;
+  });
+  tr.append("td").append("span").text(function(test) {
+       return test.webservices.join(" ");
+  });
+  tr.append("td").append("span").text(function(test) {
+       return test.description;
+  });
+  tr.append("td")
+    .append("button")
+    .text("Run")
+    .on("click", function(d) {
+      runOneTest(d.testid, fdsn);
+    });
+}
+
 function makeResultsTable(dc, inTests) {
   let div = d3.select("div.results");
   div.selectAll("*").remove();
@@ -267,6 +323,49 @@ function makeResultsTable(dc, inTests) {
   });
   tr.append("td").append("span").text(function(test) {
        return test.description;
+  });
+  tr.append("td").attr("class", "testmessage");
+  tr.append("td").attr("class", "runtime");
+}
+
+
+function makeResultsOneTestTable(test, fdsn) {
+console.log("makeResultsOneTestTable fdsnDCs: "+fdsn.datacenters.length);
+  let div = d3.select("div.results");
+  div.selectAll("*").remove();
+  let divP = div.append("h3");
+  divP.text("Results for ");
+  divP.text(test.testname);
+  let table = div.select("table");
+  if ( table.empty()) {
+    table = d3.select(".results").append("table");
+    let thr = table.append("thead").append("tr");
+    thr.append("th").text("Result");
+    thr.append("th").text("Name");
+    thr.append("th").text("Service");
+    thr.append("th").text("Output");
+    thr.append("th").text("Runtime (s)");
+    table.append("tbody");
+  }
+
+  let tableData = table.select("tbody")
+    .selectAll("tr")
+    .data(fdsn.datacenters);
+  tableData.exit().remove();
+  let tr = tableData.enter().append("tr").attr("class", function(dc) {return test.testid+" "+dc.id;});
+  tr.append("td").attr("class", "testresult");
+  tr.append("td")
+    .append("a").attr("href", function(dc) {
+      if (dc.website) {
+        return dc.website;
+      } else {
+        return "http://"+dc.host;
+      }
+    }).html(function(dc) {
+      return dc.name;
+    });
+  tr.append("td").append("span").text(function(dc) {
+       return serviceHost(dc, test.webservices[0]);
   });
   tr.append("td").attr("class", "testmessage");
   tr.append("td").attr("class", "runtime");
@@ -335,36 +434,33 @@ function runAllTests(fdsn, dcid) {
     return combinedTests;
   });
 
-RSVP.all(dcTests.map(function(dcT) { return RSVP.hash(dcT);}))
-.then(function() {console.log("tests finished"); })
-.catch(function(r) {
-  console.assert(false, r);
-  console.log("oops, something didn't finish");
-});
-
-
-
-//.selectAll("p").data(fdsn.datacenters)
-//    .enter().append('p').text(function(d) {
-//        return d.name;
-//    });
-}
-
-function old_doesSupport(dc, type) {
-  let out = dc.supports.find(function(s) { return s.type === type;});
-//  if (! out) {
-//    let dcws = dc.supports.map(function(d) { return d.type; }).join(',');
-//    console.log("not doesSupport "+dc.id+" "+dcws+" "+type+" undef");
-//  }
-  return typeof out != 'undefined';
+  RSVP.all(dcTests.map(function(dcT) { return RSVP.hash(dcT);}))
+  .then(function() {console.log("tests finished"); })
+  .catch(function(r) {
+    console.assert(false, r);
+    console.log("oops, something didn't finish");
+  });
 
 }
 
-function old_serviceHost(dc, type) {
-  let does = doesSupport(dc, type);
-  if (does) {
-    return does.host ? does.host : dc.host;
-  }
-  return null;
+
+function runOneTest(testid, fdsn) {
+console.log("allFdsnTests: "+allFdsnTests);
+console.log("fdsn dcs: "+fdsn.datacenters.length);
+// loop dc and tests...
+  let test = allFdsnTests.all.find(function(d) {
+    return d.testid === testid;
+  });
+  makeResultsOneTestTable(test, fdsn);
+  let dcTests = fdsn.datacenters.map(function(dc) {
+    let sel = d3.select("tr."+dc.id).select("td.testresult");
+    sel.append("span").text("Run");
+// wrong if test in on multiple server types
+    return runTestOnDC(test, dc, test.webservices[0]);
+  });
+  return RSVP.allSettled(dcTests)
+    .then(function(settled) {
+      console.log("runOneTest settled: "+settled.length+" "+settled[0]);
+    });
 }
 

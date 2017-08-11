@@ -63,6 +63,8 @@ let tests = {
      fdsnDataTests: [ testDataSelectVersion, testNoData204DataSelect, testDataSelectNoData, testDataSelectRecent ]
  };
 
+tests.all = tests.fdsnEventTests.concat(tests.fdsnStationTests).concat(tests.fdsnDataTests);
+
 let notVersionTest = {
      fdsnEventTests: tests.fdsnEventTests.filter(function(d) {
          return d.testid.indexOf("version") === -1;
