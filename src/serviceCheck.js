@@ -109,6 +109,10 @@ console.log("run "+test.testname+" on "+dc.id+" "+DCType);
       runtimeSel.append("span").text(Math.round(testOut.runtime)/1000);
       return testOut;
   }).catch(function(err) {
+      let runtime = ( performance.now() - testRunStart );
+      let runtimeSel = d3.select("tr."+test.testid+"."+dc.id).select("td.runtime");
+      runtimeSel.selectAll("*").remove();
+      runtimeSel.append("span").text(Math.round(runtime)/1000);
       let messageSel = d3.select("tr."+test.testid+"."+dc.id).select("td.testmessage");
 console.log("catch in test='"+test.testname+"' on "+dc.id+" "+DCType);
 console.assert(false, err);
@@ -252,6 +256,7 @@ console.log("makeTestsTable: fdsn"+fdsn.datacenters.length);
     table = d3.select(".testlist").append("table");
     let thr = table.append("thead").append("tr");
     thr.append("th").text("Test Name");
+    thr.append("th").text("Run");
     thr.append("th").text("Service");
     thr.append("th").text("Detail");
     table.append("tbody");
@@ -269,18 +274,18 @@ console.log("makeTestsTable: fdsn"+fdsn.datacenters.length);
     .text(function(test) {
        return test.testname;
   });
-  tr.append("td").append("span").text(function(test) {
-       return test.webservices.join(" ");
-  });
-  tr.append("td").append("span").text(function(test) {
-       return test.description;
-  });
   tr.append("td")
     .append("button")
     .text("Run")
     .on("click", function(d) {
       runOneTest(d.testid, fdsn);
     });
+  tr.append("td").append("span").text(function(test) {
+       return test.webservices.join(" ");
+  });
+  tr.append("td").append("span").text(function(test) {
+       return test.description;
+  });
 }
 
 function makeResultsTable(dc, inTests) {
