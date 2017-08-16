@@ -2,7 +2,7 @@
 
 import {allFdsnTests} from './allServiceTests';
 import * as seisplotjs from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {DS, EV, ST, serviceHost, doesSupport, githubTestURL } from './util';
 
 // seisplotjs comes from the seisplotjs standalone bundle
 let d3 = seisplotjs.d3;
@@ -75,8 +75,8 @@ console.log("RunTestOnDC: "+test.testname+" "+dc.id+" "+DCType+"  sup="+doesSupp
   }).then(function() {
      // run test and package up result
 console.log("run "+test.testname+" on "+dc.id+" "+DCType);
-     return test.test(dc)
-       .then(function(result) {
+     return test.test(dc);
+  }).then(function(result) {
          let out = {
            text: "ok",
            test: test,
@@ -95,7 +95,6 @@ console.log("run "+test.testname+" on "+dc.id+" "+DCType);
            out.output = result.output;
          }
          return out;
-       });
   }).then(function(testOut) {
       sel.selectAll("*").remove();
       sel.append("a")
@@ -265,7 +264,9 @@ console.log("makeTestsTable: fdsn"+fdsn.datacenters.length);
     .data(allTests);
   tableData.exit().remove();
   let tr = tableData.enter().append("tr").attr("class", function(test) {return test.testid;});
-  tr.append("td").append("span").text(function(test) {
+  tr.append("td")
+    .append("a").attr("href", function(test) {return githubTestURL(test.testid);})
+    .text(function(test) {
        return test.testname;
   });
   tr.append("td").append("span").text(function(test) {
@@ -313,9 +314,11 @@ function makeResultsTable(dc, inTests) {
     .selectAll("tr")
     .data(allTests);
   tableData.exit().remove();
-  let tr = tableData.enter().append("tr").attr("class", function(test) {return test.testid;});
+  let tr = tableData.enter().append("tr").attr("class", function(test) {return test.testid+" "+dc.id;});
   tr.append("td").attr("class", "testresult");
-  tr.append("td").append("span").text(function(test) {
+  tr.append("td")
+    .append("a").attr("href", function(test) {return githubTestURL(test.testid);})
+    .text(function(test) {
        return test.testname;
   });
   tr.append("td").append("span").text(function(test) {
@@ -335,7 +338,7 @@ console.log("makeResultsOneTestTable fdsnDCs: "+fdsn.datacenters.length);
   div.selectAll("*").remove();
   let divP = div.append("h3");
   divP.text("Results for ");
-  divP.text(test.testname);
+  divP.append("a").attr("href", githubTestURL(test.testid)).text(test.testname);
   let table = div.select("table");
   if ( table.empty()) {
     table = d3.select(".results").append("table");

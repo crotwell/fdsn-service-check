@@ -5,6 +5,10 @@ let fdsnstation = seisplotjs.fdsnstation;
 let fdsndataselect = seisplotjs.fdsndataselect;
 let RSVP = fdsnstation.RSVP;
 
+export function githubTestURL(testid) {
+  return "https://github.com/crotwell/fdsn-service-check/blob/master/src/test"+testid+".js";
+}
+
 export function findSupport(dc, type) {
   return dc.supports.find(function(s) { return s.type === type;});
 }
