@@ -1,5 +1,5 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
+import {fdsnevent, fdsnstation, fdsndataselect, d3} from 'seisplotjs';
 import {DS, EV, ST, serviceHost, doesSupport, randomNetwork, randomStation } from './util';
 
 let RSVP = fdsnstation.RSVP;
