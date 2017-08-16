@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testDataSelectRecent = {
   testname: "Recent Data",
-  testid: "recentData",
+  testid: "DataSelectRecent",
   description: "Attempts to make a dataselect query by first querying for networks, then stations within the a random network and then using a random station to request the last 300 seconds for a SHZ,BHZ channel. Success as long as the query returns, even with an empty result.",
   webservices: [ ST, DS ],
   severity: 'severe',

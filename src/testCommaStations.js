@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testCommaStations = {
   testname: "Comma Stations",
-  testid: "commastations",
+  testid: "CommaStations",
   description: "Queries for two station codes separated by comma from within a random unrestricted network returned from all networks, success as long as the query returns at least two stations.",
   webservices: [ ST ],
   severity: 'severe',

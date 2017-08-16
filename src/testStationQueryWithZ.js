@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testStationQueryWithZ = {
   testname: "Starttime Query With Z",
-  testid: "stationqueryZ",
+  testid: "StationQueryWithZ",
   description: "Queries for stations with starttime of 2016-01-01 using a time that ends with Z",
   webservices: [ ST ],
   severity: 'opinion',

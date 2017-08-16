@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testEventFromBestGuessEventId = {
   testname: "Best Guess EventId",
-  testid: "guesseventid",
+  testid: "EventFromBestGuessEventId",
   description: "Queries events in the past 24 hours, then tries to make an eventid= query for the first event using a huristic to determine the eventid. This allows a client to do a general then specific query style, but with more effort than eventid=publicID as the client must guess the value for eventid in the specific query. This is also fragile as the huristic must be updated for each new server.",
   webservices: [ EV ],
   severity: 'severe',

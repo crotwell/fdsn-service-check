@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testNoData204DataSelect = {
   testname: "DataSelect 204",
-  testid: "nodata204DataSelect",
+  testid: "NoData204DataSelect",
   description: "Check that 204 is returned for queries for dataselect that should be valid but return no data without nodata=404. Success if 204 http status is returned. This can also be a check on the CORS header.",
   webservices: [ DS ],
   severity: 'severe',

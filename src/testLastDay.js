@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testLastDay = {
   testname: "Last Day",
-  testid: "lastday",
+  testid: "LastDay",
   description: "Queries for events in the past 24 hours",
   webservices: [ EV ],
   severity: 'severe',

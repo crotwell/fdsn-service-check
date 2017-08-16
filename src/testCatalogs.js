@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testCatalogs = {
   testname: "Catalogs",
-  testid: "catalogs",
+  testid: "Catalogs",
   description: "Queries the list of catalogs of the event service, success as long as the query returns something",
   webservices: [ EV ],
   severity: 'severe',

@@ -5,7 +5,7 @@ import {DS, EV, ST, serviceHost, doesSupport } from './util';
 
 export let testEventVersion = {
   testname: "Event Version",
-  testid: "eventversion",
+  testid: "EventVersion",
   description: "Queries the version of the service, success as long as the query returns something",
   webservices: [ EV ],
   severity: 'severe',

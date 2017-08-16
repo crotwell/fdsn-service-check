@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testSensitivityUnit = {
   testname: "Sensitvity units valid SI",
-  testid: "sensitivityUnits",
+  testid: "SensitivityUnit",
   description: "Checks the units in the instrumentSensitivity against the validation list at https://github.com/iris-edu/StationXML-Validator/wiki/Unit-name-overview-for-IRIS-StationXML-validator",
   webservices: [ ST ],
   severity: 'opinion',

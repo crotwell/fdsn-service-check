@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testStationCrossDateLine = {
   testname: "Station Cross Date Line",
-  testid: "stationcrossdate",
+  testid: "StationCrossDateLine",
   description: "Queries for stations in a region that crosses the date line, ie minlon > maxlon",
   webservices: [ ST ],
   severity: 'opinion',
@@ -29,8 +29,8 @@ export let testStationCrossDateLine = {
       .networkCode(randomStation.network().networkCode())
       .minLat(randomStation.latitude()-1)
       .maxLat(randomStation.latitude()+1)
-      .minLon(randomStation.longitude()-1)
-      .maxLon(-179);
+      .minLon(randomStation.longitude()+2)
+      .maxLon(randomStation.longitude()+1);
     let url = stationQuery.formURL(fdsnstation.LEVEL_STATION);
     return new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();

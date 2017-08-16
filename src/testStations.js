@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testStations = {
   testname: "Stations",
-  testid: "stations",
+  testid: "Stations",
   description: "Queries for stations within a random unrestricted network returned from all networks, success as long as the query returns something, even an empty result.",
   webservices: [ ST ],
   severity: 'severe',

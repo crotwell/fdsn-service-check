@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testNoDataEvent = {
   testname: "NoData Event",
-  testid: "nodataevent",
+  testid: "NoDataEvent",
   description: "Queries for events that should be valid but return no data. Success if nothing is returned. This can also be a check on the CORS header.",
   webservices: [ EV ],
   severity: 'severe',

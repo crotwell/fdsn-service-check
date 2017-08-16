@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testNetworks = {
   testname: "Networks",
-  testid: "networks",
+  testid: "Networks",
   description: "Queries for all networks, success as long as the query returns something, even an empty result.",
   webservices: [ ST ],
   severity: 'severe',

@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testStationDateIncludeZ = {
   testname: "Station Date Ends w/ Z",
-  testid: "stationdataZ",
+  testid: "StationDateIncludeZ",
   description: "Queries for stations in random network and checks that the start and end time string ends with a Z for UTC timezone.",
   webservices: [ ST ],
   severity: 'opinion',

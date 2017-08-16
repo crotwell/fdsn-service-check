@@ -6,7 +6,8 @@ let RSVP = fdsnstation.RSVP;
 
 export let testNoData204Station = {
   testname: "Station 204",
-  testid: "nodata204Station",  description: "Check that 204 is returned for queries for networks that should be valid but return no data, without nodata=404. Success if 204 http status is returned. This can also be a check on the CORS header.",
+  testid: "NoData204Station",
+  description: "Check that 204 is returned for queries for networks that should be valid but return no data, without nodata=404. Success if 204 http status is returned. This can also be a check on the CORS header.",
   webservices: [ ST ],
   severity: 'severe',
   test: function(dc) {

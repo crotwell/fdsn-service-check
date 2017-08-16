@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testNoDataNetwork = {
   testname: "NoData Networks",
-  testid: "nodatanetworks",
+  testid: "NoDataNetwork",
   description: "Queries for networks that should be well formed but return no networks, success as long as the query returns something, even an empty result. This can also be a check on the CORS header.",
   webservices: [ ST ],
   severity: 'severe',

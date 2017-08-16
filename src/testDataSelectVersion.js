@@ -5,7 +5,7 @@ import {DS, EV, ST, serviceHost, doesSupport } from './util';
 
 export let testDataSelectVersion = {
   testname: "DataSelect Version",
-  testid: "dataselectversion",
+  testid: "DataSelectVersion",
   description: "Queries the version of the service, success as long as the query returns something",
   webservices: [ DS ],
   severity: 'severe',

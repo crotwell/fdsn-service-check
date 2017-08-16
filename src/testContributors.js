@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testContributors = {
   testname: "Contributors",
-  testid: "contributors",
+  testid: "Contributors",
   description: "Queries the list of contributors of the event service, success as long as the query returns something",
   webservices: [ EV ],
   severity: 'severe',

@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testDataSelectNoData = {
   testname: "No Data",
-  testid: "dsnodata",
+  testid: "DataSelectNoData",
   description: "Attempts to make a dataselect query that should be correctly formed but should not return data. Success as long as the query returns, even with an empty result. This can also be a check on the CORS header.",
   webservices: [ DS ],
   severity: 'severe',

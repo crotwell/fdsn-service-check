@@ -6,7 +6,8 @@ let RSVP = fdsnstation.RSVP;
 
 export let testNoData204Event = {
   testname: "Event 204",
-  testid: "nodata204event",  description: "Check that 204 is returned for queries for events that should be valid but return no data without nodata=404. Success if 204 http status is returned. This can also be a check on the CORS header.",
+  testid: "NoData204Event",
+  description: "Check that 204 is returned for queries for events that should be valid but return no data without nodata=404. Success if 204 http status is returned. This can also be a check on the CORS header.",
   webservices: [ EV ],
   severity: 'severe',
   test: function(dc) {

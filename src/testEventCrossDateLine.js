@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testEventCrossDateLine = {
   testname: "Cross Date Line",
-  testid: "eventcrossdate",
+  testid: "EventCrossDateLine",
   description: "Queries for events in a region that crosses the date line, ie minlon > maxlon",
   webservices: [ EV ],
   severity: 'opinion',
