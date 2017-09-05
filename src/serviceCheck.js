@@ -258,6 +258,7 @@ console.log("makeTestsTable: fdsn"+fdsn.datacenters.length);
     thr.append("th").text("Test Name");
     thr.append("th").text("Run");
     thr.append("th").text("Service");
+    thr.append("th").text("Test Code");
     thr.append("th").text("Detail");
     table.append("tbody");
   }
@@ -270,7 +271,6 @@ console.log("makeTestsTable: fdsn"+fdsn.datacenters.length);
   tableData.exit().remove();
   let tr = tableData.enter().append("tr").attr("class", function(test) {return test.testid;});
   tr.append("td")
-    .append("a").attr("href", function(test) {return githubTestURL(test.testid);})
     .text(function(test) {
        return test.testname;
   });
@@ -283,6 +283,9 @@ console.log("makeTestsTable: fdsn"+fdsn.datacenters.length);
   tr.append("td").append("span").text(function(test) {
        return test.webservices.join(" ");
   });
+  tr.append("td")
+    .append("a").attr("href", function(test) {return githubTestURL(test.testid);})
+    .text("source");
   tr.append("td").append("span").text(function(test) {
        return test.description;
   });
