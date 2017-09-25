@@ -350,10 +350,6 @@
       "region": "North America",
       "supports": [
         {
-          "type": "fdsn-event",
-          "versions": [ 1 ]
-        },
-        {
           "type": "fdsn-station",
           "versions": [ 1 ]
         },
