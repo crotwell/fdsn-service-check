@@ -1,5 +1,5 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
+import {fdsnevent, fdsnstation, fdsndataselect, moment} from 'seisplotjs';
 import {DS, EV, ST, serviceHost, doesSupport, randomNetwork } from './util';
 
 let RSVP = fdsnstation.RSVP;
@@ -21,15 +21,15 @@ export let testStationQueryWithZ = {
       return randomNetwork(dc);
     }).then(function(net) {
       let start = net.startDate();
-      start.setMilliseconds(789);
-      let end = net.endDate() ? net.endDate() : new Date();
-      end.setMilliseconds(789);
+      start.milliseconds(789);
+      let end = net.endDate() ? net.endDate() : moment.utc();
+      end.milliseconds(789);
       let host = serviceHost(dc, ST);
       let query = new fdsnstation.StationQuery()
         .host(host)
         .networkCode(net.networkCode())
         .startTime(start)
-        .endTime(new Date(new Date()));
+        .endTime(end);
       // millis is 789, so replace with 789Z
       let url = query.formURL(fdsnstation.LEVEL_STATION).replace('.789', '.789Z');
       return new Promise(function(resolve, reject) {
@@ -69,4 +69,3 @@ export let testStationQueryWithZ = {
     });
   }
 };
-
