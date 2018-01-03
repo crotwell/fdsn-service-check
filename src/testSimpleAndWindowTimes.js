@@ -6,7 +6,7 @@ let RSVP = fdsnstation.RSVP;
 
 export let testSimpleAndWindowTimes = {
   testname: "Simple and Window Times",
-  testid: "SimpleWindowTimes",
+  testid: "SimpleAndWindowTimes",
   description: "Queries for channels for a random station with both starttime and startbefore",
   webservices: [ ST ],
   severity: 'severe',
