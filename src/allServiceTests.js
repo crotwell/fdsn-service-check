@@ -20,6 +20,7 @@ import {testNoDataNetwork} from './testNoDataNetwork';
 import {testNetworks} from './testNetworks';
 import {testStations} from './testStations';
 import {testCommaStations} from './testCommaStations';
+import {testSimpleAndWindowTimes} from './testSimpleAndWindowTimes';
 import {testStationQueryWithZ} from './testStationQueryWithZ';
 import {testStationDateIncludeZ} from './testStationDateIncludeZ';
 import {testStationCrossDateLine} from './testStationCrossDateLine';
@@ -59,7 +60,7 @@ function old_serviceHost(dc, type) {
 
 let tests = {
      fdsnEventTests: [ testEventVersion, testNoData204Event, testNoDataEvent, testLastDay, testCatalogs, testContributors, testEventFromBestGuessEventId, testLastDayQueryWithZ, testDateIncludeZ, testEventCrossDateLine, testEventFromPublicID  ],
-     fdsnStationTests: [ testStationVersion, testNoData204Station, testNoDataNetwork, testNetworks, testStations, testChannels, testCommaStations, testStationQueryWithZ, testStationDateIncludeZ, testStationCrossDateLine, testSensitivityUnit ],
+     fdsnStationTests: [ testStationVersion, testNoData204Station, testNoDataNetwork, testNetworks, testStations, testChannels, testCommaStations, testSimpleAndWindowTimes, testStationQueryWithZ, testStationDateIncludeZ, testStationCrossDateLine, testSensitivityUnit ],
      fdsnDataTests: [ testDataSelectVersion, testNoData204DataSelect, testDataSelectNoData, testDataSelectRecent ]
  };
 
@@ -91,4 +92,3 @@ let justVersionTest = {
 //let out = justVersionTest;
 //let out = justOneTest;
 export let allFdsnTests = tests;
-
