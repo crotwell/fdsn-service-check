@@ -11,25 +11,37 @@ let fdsnstation = seisplotjs.fdsnstation;
 let fdsndataselect = seisplotjs.fdsndataselect;
 let RSVP = fdsnstation.RSVP;
 let UNSUPPORTED = "Unsupported";
+let dataCentersURL = "./fdsnDataCenters.json";
 
 console.log("allFdsnTests: "+allFdsnTests);
 
 let fdsnDataCenters = null;
-
-d3.json('fdsnDataCenters.json', function(fdsn) {
-  fdsnDataCenters = fdsn;
-  makeTable(fdsn);
-  makeTestsTable(allFdsnTests, fdsn);
+// note does not work for localhost and/or file loading, must
+// be from web server due to security I think
+fetch(dataCentersURL)
+  .then(function(response) {
+    console.log("got response!");
+    return response.json();
+  })
+  .then(function(jsonResponse) {
+  fdsnDataCenters = jsonResponse;
+  makeTable(fdsnDataCenters);
+  makeTestsTable(allFdsnTests, fdsnDataCenters);
+}).catch(function(error) {
+  console.assert(false, error);
+  console.log(error);
+  makeErrorMessage(error);
 });
 
 
 
 
 
+
 // all tests should be object with testid, testname and test: function(datacenter, d3selector)
-// allFdsnTests assumed to be global object with the tests in it, loaded from 
+// allFdsnTests assumed to be global object with the tests in it, loaded from
 // separate file. It should have 3 fields, each an array of tests like:
-// 
+//
 // allFdsnTests = {
 //     fdsnEventTests = [ testEventVersion, testLastDay, testCatalogs, testContributors ],
 //     fdsnStationTests = [ testStationVersion, testNetworks ],
@@ -174,7 +186,7 @@ function makeTable(fdsn) {
   tableData.exit().remove();
 
   let tr = tableData.enter().append("tr").attr("class", function(dc) {return dc.id;});
-  
+
   tr.append("td")
     .append("a").attr("href", function(d) {
       if (d.website) {
@@ -289,6 +301,15 @@ console.log("makeTestsTable: fdsn"+fdsn.datacenters.length);
   tr.append("td").append("span").text(function(test) {
        return test.description;
   });
+}
+
+function makeErrorMessage(errorMsg) {
+  let div = d3.select("div.results");
+  div.selectAll("*").remove();
+  let divH3 = div.append("h3");
+  divH3.text("Error");
+  let divP = div.append("p");
+  divP.text(errorMsg);
 }
 
 function makeResultsTable(dc, inTests) {
@@ -474,4 +495,3 @@ console.log("fdsn dcs: "+fdsn.datacenters.length);
       console.log("runOneTest settled: "+settled.length+" "+settled[0]);
     });
 }
-
