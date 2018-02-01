@@ -7,7 +7,7 @@
     "seisplotjs": "^1.1.0-alpha.1"
   },
   "scripts": {
-    "lint": "eslint 'src/*.js' 'www/*.js' ",
+    "lint": "eslint 'src/**/*.js' ",
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "babel --presets env -d lib/ src/",
     "standalone": "browserify src/*.js --standalone servicecheck -o servicecheck_${npm_package_version}_standalone.js -t [ babelify ]",
