@@ -13,7 +13,8 @@ let RSVP = fdsnstation.RSVP;
 let UNSUPPORTED = "Unsupported";
 let dataCentersURL = "./fdsnDataCenters.json";
 
-let STOP_AT_FIRST_FAIL = false;
+const STOP_AT_FIRST_FAIL = false;
+const MIN_TEST_INTERVAL = 1000;
 
 console.log("allFdsnTests: "+allFdsnTests);
 
@@ -22,22 +23,17 @@ let fdsnDataCenters = null;
 // be from web server due to security I think
 fetch(dataCentersURL)
   .then(function(response) {
-    console.log("got response!");
     return response.json();
   })
   .then(function(jsonResponse) {
-  fdsnDataCenters = jsonResponse;
-  makeTable(fdsnDataCenters);
-  makeTestsTable(allFdsnTests, fdsnDataCenters);
-}).catch(function(error) {
-  console.assert(false, error);
-  console.log(error);
-  makeErrorMessage(error);
-});
-
-
-
-
+    fdsnDataCenters = jsonResponse;
+    makeTable(fdsnDataCenters);
+    makeTestsTable(allFdsnTests, fdsnDataCenters);
+  }).catch(function(error) {
+    console.assert(false, error);
+    console.log(error);
+    makeErrorMessage(error);
+  });
 
 
 // all tests should be object with testid, testname and test: function(datacenter, d3selector)
@@ -62,8 +58,8 @@ function selectionForTestDC(test, dc) {
 }
 
 
-function runTestOnDC(test, dc, DCType) {
-  let testRunStart = performance.now();
+async function runTestOnDC(test, dc, DCType) {
+  const testRunStart = performance.now();
   let sel = selectionForTestDC(test, dc);
 console.log("RunTestOnDC: "+test.testname+" "+dc.id+" "+DCType+"  sup="+doesSupport(dc, DCType));
   if ( ! doesSupport(dc, DCType) ) {
@@ -122,6 +118,11 @@ console.log("run "+test.testname+" on "+dc.id+" "+DCType);
       runtimeSel.selectAll("*").remove();
       runtimeSel.append("span").text(Math.round(testOut.runtime)/1000);
       return testOut;
+  }).then(function(testOut) {
+      if (testOut.runtime < MIN_TEST_INTERVAL) {
+        return sleep(MIN_TEST_INTERVAL - testOut.runtime, testOut);
+      }
+      return testOut;
   }).catch(function(err) {
       let runtime = ( performance.now() - testRunStart );
       let runtimeSel = d3.select("tr."+test.testid+"."+dc.id).select("td.runtime");
@@ -158,14 +159,24 @@ console.log("   url: "+err.url);
         if (err.url) {
           sel.append("a").attr("class", failClass).attr("href", err.url).text("Oops").attr("title", popupText);
         } else {
-console.log("error with no URL", err);
           sel.append("span").attr("class", failClass).attr("title", popupText).text("Oops");
         }
         messageSel.append("span").text(popupText);
       }
+      if (runtime < MIN_TEST_INTERVAL) {
+        return sleep(MIN_TEST_INTERVAL - runtime);
+      }
       //return err;
   });
 }
+
+async function sleep(millis, value) {
+  let before = performance.now();
+  await new Promise(resolve => setTimeout(resolve(value), millis));
+  let after = performance.now();
+  console.log(("try to sleep for "+millis+", sleep was "+(after-before));
+}
+
 
 function makeTable(fdsn) {
   let div = d3.select(".datacenters");
