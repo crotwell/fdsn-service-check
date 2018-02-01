@@ -13,6 +13,8 @@ let RSVP = fdsnstation.RSVP;
 let UNSUPPORTED = "Unsupported";
 let dataCentersURL = "./fdsnDataCenters.json";
 
+let STOP_AT_FIRST_FAIL = false;
+
 console.log("allFdsnTests: "+allFdsnTests);
 
 let fdsnDataCenters = null;
@@ -74,7 +76,7 @@ console.log("RunTestOnDC: "+test.testname+" "+dc.id+" "+DCType+"  sup="+doesSupp
       sel.selectAll("*").remove();
       sel.append("span")
           .attr("class", "unsupported")
-          .text("no impl");
+          .text("unsup.");
       return out;
     });
   }
@@ -205,11 +207,13 @@ function makeTable(fdsn) {
             .attr("href", new fdsnevent.EventQuery()
                 .host(serviceHost(d, EV))
                 .formBaseURL())
+            .attr("class", "supported")
             .text( "Yes" );
           return aElement;
         } else {
           let spanElement = document.createElement("span");
           d3.select(spanElement)
+            .attr("class", "unsupported")
             .text( "No");
           return spanElement;
         }
@@ -222,11 +226,13 @@ function makeTable(fdsn) {
             .attr("href", new fdsnstation.StationQuery()
                 .host(serviceHost(d, ST))
                 .formBaseURL())
+            .attr("class", "supported")
             .text( "Yes" );
           return aElement;
         } else {
           let spanElement = document.createElement("span");
           d3.select(spanElement)
+            .attr("class", "unsupported")
             .text( "No");
           return spanElement;
         }
@@ -239,11 +245,13 @@ function makeTable(fdsn) {
             .attr("href", new fdsndataselect.DataSelectQuery()
                 .host(serviceHost(d, DS))
                 .formBaseURL())
+            .attr("class", "supported")
             .text( "Yes" );
           return aElement;
         } else {
           let spanElement = document.createElement("span");
           d3.select(spanElement)
+            .attr("class", "unsupported")
             .text( "No");
           return spanElement;
         }
@@ -252,7 +260,7 @@ function makeTable(fdsn) {
     .append("button")
     .text("Run")
     .on("click", function(d) {
-      runAllTests(fdsn, d.id);
+      runAllTests(fdsn, d.id, STOP_AT_FIRST_FAIL);
     });
 }
 
@@ -403,7 +411,8 @@ console.log("makeResultsOneTestTable fdsnDCs: "+fdsn.datacenters.length);
   tr.append("td").attr("class", "runtime");
 }
 
-function runAllTests(fdsn, dcid) {
+function runAllTests(fdsn, dcid, stopAtFirstFail) {
+  let continueOnFail = ! stopAtFirstFail;
 // loop dc and tests...
   let dc = fdsn.datacenters.find(function(dc) {
     return dc.id === dcid;
@@ -427,7 +436,7 @@ function runAllTests(fdsn, dcid) {
     if (doesSupport(dc, EV)) {
       combinedTests.fdsnevent = allFdsnTests.fdsnEventTests.reduce(function(acc, test) {
         return acc.then(function(prevResult) {
-          if (prevResult) {
+          if (continueOnFail || prevResult) {
             let sel = selectionForTestDC(test, dc);
             sel.append("span").text("Run");
             return runTestOnDC(test, dc, EV);
@@ -440,7 +449,7 @@ function runAllTests(fdsn, dcid) {
     if (doesSupport(dc, ST)) {
        combinedTests.fdsnstation = allFdsnTests.fdsnStationTests.reduce(function(acc, test) {
         return acc.then(function(prevResult) {
-          if (prevResult) {
+          if (continueOnFail || prevResult) {
             let sel = selectionForTestDC(test, dc);
             sel.append("span").text("Run");
             return runTestOnDC(test, dc, ST);
@@ -453,7 +462,7 @@ function runAllTests(fdsn, dcid) {
     if (doesSupport(dc, DS)) {
       combinedTests.fdsndataselect = allFdsnTests.fdsnDataTests.reduce(function(acc, test) {
         return acc.then(function(prevResult) {
-          if (prevResult) {
+          if (continueOnFail || prevResult) {
             let sel = selectionForTestDC(test, dc);
             sel.append("span").text("Run");
             return runTestOnDC(test, dc, DS);
