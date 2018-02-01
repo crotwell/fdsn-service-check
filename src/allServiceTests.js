@@ -42,23 +42,6 @@ let RSVP = fdsnstation.RSVP;
 // end test defs
 
 
-function old_doesSupport(dc, type) {
-  let out = dc.supports.find(function(s) { return s.type === type;});
-//  if (! out) {
-//    let dcws = dc.supports.map(function(d) { return d.type; }).join(',');
-//    console.log("not doesSupport "+dc.id+" "+dcws+" "+type+" undef");
-//  }
-  return typeof out != 'undefined';
-}
-
-function old_serviceHost(dc, type) {
-  let does = doesSupport(dc, type);
-  if (does) {
-    return does.host ? does.host : dc.host;
-  }
-  return null;
-}
-
 let tests = {
      fdsnEventTests: [ testEventVersion, testNoData204Event, testNoDataEvent, testLastDay, testCatalogs, testContributors, testEventFractionalSeconds, testEventFromBestGuessEventId, testLastDayQueryWithZ, testDateIncludeZ, testEventCrossDateLine, testEventFromPublicID  ],
      fdsnStationTests: [ testStationVersion, testNoData204Station, testNoDataNetwork, testNetworks, testStations, testChannels, testCommaStations, testSimpleAndWindowTimes, testStationQueryWithZ, testStationDateIncludeZ, testStationCrossDateLine, testSensitivityUnit ],

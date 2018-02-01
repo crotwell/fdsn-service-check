@@ -174,7 +174,7 @@ async function sleep(millis, value) {
   let before = performance.now();
   await new Promise(resolve => setTimeout(resolve(value), millis));
   let after = performance.now();
-  console.log(("try to sleep for "+millis+", sleep was "+(after-before));
+  console.log("try to sleep for "+millis+", sleep was "+(after-before));
 }
 
 
