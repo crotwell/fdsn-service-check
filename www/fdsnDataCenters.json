@@ -10,7 +10,7 @@
       "region": "North America",
       "supports": [
         {
-          "type": "fdsn-event", 
+          "type": "fdsn-event",
           "versions": [ 1 ]
         },
         {
@@ -158,6 +158,24 @@
       ]
     },
     {
+      "id": "ICGC",
+      "name": "ICGC, Catalan Seismic Network (CA)",
+      "website": "http://www.icgc.cat/en/xarxasismica",
+      "email": "",
+      "host": "http://www.icgc.cat",
+      "region": "Europe",
+      "supports": [
+        {
+          "type": "fdsn-station",
+          "versions": [ 1 ]
+        },
+        {
+          "type": "fdsnws-dataselect",
+          "versions": [ 1 ]
+        }
+      ]
+    },
+    {
       "id": "IPGP",
       "name": "IPGP Data Center",
       "website": "http://centrededonnees.ipgp.fr",
@@ -209,7 +227,7 @@
           "type": "fdsn-event",
           "versions": [ 1 ],
           "mirrors": [
-            { 
+            {
               "host": "isc-mirror.iris.washington.edu",
               "region": "North America"
             }
