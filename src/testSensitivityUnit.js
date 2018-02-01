@@ -33,14 +33,17 @@ export let testSensitivityUnit = {
           return nets;
         });
     }).then(function(nets) {
-      return new Promise(function(resolve, reject){
-        d3.json('knownUnits.json', function(error, knownUnits) {
-          error ? reject(error) : resolve(knownUnits);
-        });
-      }).then(function(knownUnits) {
-console.log("Units: "+knownUnits.units);
-        return knownUnits.units;
-      }).then(function(knownUnits) {
+      return RSVP.hash({
+        "knownUnits": fetch('knownUnits.json').then(function(response) {
+                        return response.json();
+                      }),
+        "nets": nets
+      });
+    }).then(function(hash) {
+      console.log("hash knownUnits: "+hash.knownUnits);
+        const knownUnits = hash.knownUnits.units;
+        const nets = hash.nets;
+        console.log("Units: "+knownUnits);
         for (let n of nets) {
           for (let s of n.stations()) {
 console.log("Station: "+s.codes());
@@ -90,7 +93,5 @@ console.log("Station: "+s.codes());
           output: channels
         };
       });
-    });
   }
 };
-
