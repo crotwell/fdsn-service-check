@@ -1,4 +1,6 @@
 lib
 node_modules
 seisplotjs_*_standalone.js
-example/**/seisplotjs_*_standalone.js
+servicecheck_*_standalone.js
+www/servicecheck_*_standalone.js
+www/**/seisplotjs_*_standalone.js
