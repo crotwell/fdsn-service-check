@@ -29,7 +29,7 @@ export let testSimpleAndWindowTimes = {
       .networkCode(randomStation.network().networkCode())
       .stationCode(randomStation.stationCode())
       .startTime(randomStation.startDate())
-      .endAfter('2017-01-01T00:00:00Z');
+      .endAfter(randomStation.startDate());
     let url = stationQuery.formURL(fdsnstation.LEVEL_STATION);
     return new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();
