@@ -381,6 +381,22 @@
           "versions": [ 1 ]
         }
       ]
+    },
+    {
+      "id": "SCSN",
+      "name": "South Carolina Seismic Network",
+      "website": "www.seis.sc.edu",
+      "email": "scsn@seis.sc.edu",
+      "host": "eeyore.seis.sc.edu",
+      "region": "North America",
+      "supports": [
+        {
+          "type": "ringserver",
+          "versions": [ 3.1 ],
+          "host": "eeyore.seis.sc.edu",
+          "port": 6382
+        }
+      ]
     }
   ]
 }
