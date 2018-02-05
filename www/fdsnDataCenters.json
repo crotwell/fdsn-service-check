@@ -1,5 +1,5 @@
 {
-  "created": "2017-07-14T13:04:18Z",
+  "created": "2018-02-05T18:10:00Z",
   "datacenters": [
     {
       "id": "IRIS",
@@ -20,6 +20,11 @@
         {
           "type": "fdsnws-dataselect",
           "versions": [ 1 ]
+        },
+        {
+          "type": "ringserver",
+          "versions": [ 3.1 ],
+          "host": "rtserve.iris.washington.edu"
         }
       ]
     },
