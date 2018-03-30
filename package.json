@@ -4,7 +4,7 @@
   "description": "Javascript library for testing FDSN web services.",
   "main": "lib/index.js",
   "dependencies": {
-    "seisplotjs": "^1.1.0-alpha.1"
+    "seisplotjs": "^1.2.0-alpha.1"
   },
   "scripts": {
     "lint": "eslint 'src/**/*.js' ",
