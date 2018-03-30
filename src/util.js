@@ -15,10 +15,6 @@ export function findSupport(dc, type) {
 
 export function doesSupport(dc, type) {
   let out = dc.supports.find(function(s) { return s.type === type;});
-//  if (! out) {
-//    let dcws = dc.supports.map(function(d) { return d.type; }).join(',');
-//    console.log("not doesSupport "+dc.id+" "+dcws+" "+type+" undef");
-//  }
   return typeof out != 'undefined';
 }
 
@@ -30,9 +26,9 @@ export function serviceHost(dc, type) {
   return null;
 }
 
-export let DS = "fdsnws-dataselect";
-export let EV = "fdsn-event";
-export let ST = "fdsn-station";
+export const DS = "fdsnws-dataselect";
+export const EV = "fdsn-event";
+export const ST = "fdsn-station";
 
 export function randomNetwork(dc, startTime) {
   let host = serviceHost(dc, ST);
@@ -121,4 +117,3 @@ export function randomStation(dc, netCode, startTime) {
 export function dateStrEndsZ(s) {
   return s.charAt(s.length-1) === 'Z';
 }
-
