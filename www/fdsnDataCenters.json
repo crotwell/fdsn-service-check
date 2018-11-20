@@ -397,6 +397,20 @@
           "port": 6382
         }
       ]
+    },
+    {
+      "id": "EMSC",
+      "name": "European-Mediterranean Seismological Centre",
+      "website": "http://www.seismicportal.eu/webservices.html",
+      "email": "",
+      "host": "www.seismicportal.eu",
+      "region": "Europe",
+      "supports": [
+        {
+          "type": "fdsn-event",
+          "versions": [ 1 ]
+        }
+      ]
     }
   ]
 }
