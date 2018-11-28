@@ -411,6 +411,28 @@
           "versions": [ 1 ]
         }
       ]
+    },
+    {
+      "id": "KNMI",
+      "name": "Royal Netherlands Meteorological Institute",
+      "website": "http://rdsa.knmi.nl/",
+      "email": "",
+      "host": "rdsa.knmi.nl",
+      "region": "Europe",
+      "supports": [
+        {
+          "type": "fdsn-event",
+          "versions": [ 1 ]
+        },
+        {
+          "type": "fdsn-station",
+          "versions": [ 1 ]
+        },
+        {
+          "type": "fdsnws-dataselect",
+          "versions": [ 1 ]
+        }
+      ]
     }
   ]
 }
