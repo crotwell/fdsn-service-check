@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect, moment} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport, randomNetwork } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP, moment} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport, randomNetwork } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testStationQueryWithZ = {
   testname: "Starttime Query With Z",
@@ -20,14 +19,12 @@ export let testStationQueryWithZ = {
     }).then(function() {
       return randomNetwork(dc);
     }).then(function(net) {
-      let start = net.startDate();
+      let start = net.startDate;
       start.milliseconds(789);
-      let end = net.endDate() ? net.endDate() : moment.utc();
+      let end = net.endDate ? net.endDate : moment.utc();
       end.milliseconds(789);
-      let host = serviceHost(dc, ST);
-      let query = new fdsnstation.StationQuery()
-        .host(host)
-        .networkCode(net.networkCode())
+      let query = createQuery(dc, ST)
+        .networkCode(net.networkCode)
         .startTime(start)
         .endTime(end);
       // millis is 789, so replace with 789Z

@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testEventCrossDateLine = {
   testname: "Cross Date Line",
@@ -19,9 +18,7 @@ export let testEventCrossDateLine = {
     }
    }).then(function() {
     let daysAgo = 1;
-    let host = serviceHost(dc, EV);
-    let quakeQuery = new fdsnevent.EventQuery()
-      .host(host)
+    let quakeQuery = createQuery(dc, EV)
       .startTime(new Date(Date.parse('2017-01-01T12:34:56.789')))
       .endTime(new Date(Date.parse('2017-01-05T00:00:00.000')))
       .minLat(-20)
@@ -63,4 +60,3 @@ export let testEventCrossDateLine = {
     });
   }
 };
-

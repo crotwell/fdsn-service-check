@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testEventFromBestGuessEventId = {
   testname: "Best Guess EventId",
@@ -13,28 +12,25 @@ export let testEventFromBestGuessEventId = {
   test: function(dc) {
     let url = "none";
     let daysAgo = .5;
-    let host = serviceHost(dc, EV);
     return new RSVP.Promise(function(resolve, reject) {
       if ( ! doesSupport(dc, EV) ) {
         reject(new Error("Unsupported"));
       } else {
-        host = serviceHost(dc, EV);
-        resolve(host);
+        resolve();
       }
-    }).then(function(host) {
-      let quakeQuery = new fdsnevent.EventQuery()
-        .host(host)
+    }).then(function() {
+      let quakeQuery = createQuery(dc, EV)
         .startTime(new Date(new Date().getTime()-86400*daysAgo*1000))
         .endTime(new Date());
       url = quakeQuery.formURL();
+      console.log("event for eventid test: "+url);
       return quakeQuery.query();
     }).then(function(quakes) {
         if (quakes.length == 0) {
           throw new Error("No quakes returned");
         }
-        let singleQuakeQuery = new fdsnevent.EventQuery()
-          .host(host)
-          .eventid(encodeURIComponent(quakes[0].eventid()));
+        let singleQuakeQuery = createQuery(dc, EV)
+          .eventId(encodeURIComponent(quakes[0].eventId));
         url = singleQuakeQuery.formURL();
         return singleQuakeQuery.query();
     }).then(function(quakes) {

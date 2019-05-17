@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport, randomNetwork, randomStation, dateStrEndsZ } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation, dateStrEndsZ } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testStationDateIncludeZ = {
   testname: "Station Date Ends w/ Z",
@@ -11,7 +10,6 @@ export let testStationDateIncludeZ = {
   webservices: [ ST ],
   severity: 'opinion',
   test: function(dc) {
-    let host = serviceHost(dc, ST);
     return new RSVP.Promise(function(resolve, reject) {
       if ( ! doesSupport(dc, ST) ) {
         reject(new Error("Unsupported"));
@@ -21,9 +19,8 @@ export let testStationDateIncludeZ = {
     }).then(function() {
       return randomNetwork(dc);
     }).then(function(net) {
-      let query = new fdsnstation.StationQuery()
-        .host(host)
-        .networkCode(net.networkCode());
+      let query = createQuery(dc, ST)
+        .networkCode(net.networkCode);
       return query.queryRawXml(fdsnstation.LEVEL_STATION);
     }).then(function(staml) {
       let top = staml.documentElement;
@@ -56,4 +53,3 @@ export let testStationDateIncludeZ = {
     });
   }
 };
-

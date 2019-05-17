@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testEventFromPublicID = {
   testname: "eventid=publicID",
@@ -19,9 +18,7 @@ export let testEventFromPublicID = {
       }
    }).then(function() {
     let daysAgo = .5;
-    let host = serviceHost(dc, EV);
-    let quakeQuery = new fdsnevent.EventQuery()
-      .host(host)
+    let quakeQuery = createQuery(dc, EV)
       .startTime(new Date(new Date().getTime()-86400*daysAgo*1000))
       .endTime(new Date());
     let url = quakeQuery.formURL();
@@ -29,9 +26,8 @@ export let testEventFromPublicID = {
         if (quakes.length == 0) {
           throw new Error("No quakes returned");
         }
-        let singleQuakeQuery = new fdsnevent.EventQuery()
-          .host(host)
-          .eventid(encodeURIComponent(quakes[0].publicID));
+        let singleQuakeQuery = createQuery(dc, EV)
+          .eventId(encodeURIComponent(quakes[0].publicId));
         url = singleQuakeQuery.formURL();
         return singleQuakeQuery.query();
       }).then(function(singleQuake) {
@@ -51,4 +47,3 @@ export let testEventFromPublicID = {
     });
   }
 };
-

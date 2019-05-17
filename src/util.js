@@ -3,7 +3,7 @@ import * as seisplotjs from 'seisplotjs';
 let fdsnevent = seisplotjs.fdsnevent;
 let fdsnstation = seisplotjs.fdsnstation;
 let fdsndataselect = seisplotjs.fdsndataselect;
-let RSVP = fdsnstation.RSVP;
+let RSVP = seisplotjs.RSVP;
 
 export function githubTestURL(testid) {
   return "https://github.com/crotwell/fdsn-service-check/blob/master/src/test"+testid+".js";
@@ -26,14 +26,36 @@ export function serviceHost(dc, type) {
   return null;
 }
 
+export function servicePort(dc, type) {
+  let does = findSupport(dc, type);
+  if (does) {
+    return does.port ? does.port : 80;
+  }
+  return null;
+}
+
+export function createQuery(dc, type) {
+  let q = null;
+  if (type === DS) {
+    q = new fdsndataselect.DataSelectQuery();
+  } else if (type === EV) {
+    q = new fdsnevent.EventQuery();
+  } else if (type === ST) {
+    q = new fdsnstation.StationQuery();
+  } else {
+    throw new Error("Unkown type: "+type);
+  }
+  q.host(serviceHost(dc, type));
+  q.port(servicePort(dc, type));
+  return q;
+}
+
 export const DS = "fdsnws-dataselect";
 export const EV = "fdsn-event";
 export const ST = "fdsn-station";
 
 export function randomNetwork(dc, startTime) {
-  let host = serviceHost(dc, ST);
-  let query = new fdsnstation.StationQuery()
-      .host(host);
+  let query = createQuery(dc, ST);
   if (startTime) {
     query.startTime(startTime);
   }
@@ -47,8 +69,8 @@ export function randomNetwork(dc, startTime) {
     // got some nets
     let permNetRE = /[A-W][A-Z0-9]/;
     let unrestricted = networks.filter(function(net) {
-      return  (( ! net.restrictedStatus()) || net.restrictedStatus() == "open")
-             && permNetRE.test(net.networkCode());
+      return  (( ! net.restrictedStatus || net.restrictedStatus == "open")
+             && permNetRE.test(net.networkCode));
     });
     if (unrestricted.length == 0) {
       let errRestricted = new Error("No unrestricted networks");
@@ -76,9 +98,7 @@ export function randomNetwork(dc, startTime) {
 }
 
 export function randomStation(dc, netCode, startTime) {
-  let host = serviceHost(dc, ST);
-  let query = new fdsnstation.StationQuery()
-      .host(host)
+  let query = createQuery(dc, ST)
       .networkCode(netCode);
   if (startTime) {
     query.startTime(startTime);
@@ -90,17 +110,17 @@ export function randomStation(dc, netCode, startTime) {
       err.url = url;
       throw err;
     }
-    if (networks[0].stations().length == 0) {
-      let errNoSta = new Error("No stations in network "+networks[0].networkCode());
+    if (networks[0].stations.length == 0) {
+      let errNoSta = new Error("No stations in network "+networks[0].networkCode);
       errNoSta.url = url;
       throw errNoSta;
     }
     // got some stations in first net
-    let unrestricted = networks[0].stations().filter(function(net) {
-      return ( ! net.restrictedStatus()) || net.restrictedStatus() == "open";
+    let unrestricted = networks[0].stations.filter(function(net) {
+      return ( ! net.restrictedStatus || net.restrictedStatus == "open");
     });
     if (unrestricted.length == 0) {
-      let errRestricted = new Error("No unrestricted stations in "+networks[0].networkCode());
+      let errRestricted = new Error("No unrestricted stations in "+networks[0].networkCode);
       errRestricted.url = url;
       throw errRestricted;
     }

@@ -1,6 +1,6 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
 
 export let testStationVersion = {
@@ -10,10 +10,7 @@ export let testStationVersion = {
   webservices: [ ST ],
   severity: 'severe',
   test: function(dc) {
-    let host = serviceHost(dc, ST);
-
-    let query = new fdsnstation.StationQuery()
-      .host(host);
+    let query = createQuery(dc, ST);
     let url = query.formVersionURL();
     return query.queryVersion().then(function(version) {
       return {

@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport, randomNetwork, randomStation } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testDataSelectRecent = {
   testname: "Recent Data",
@@ -20,15 +19,12 @@ export let testDataSelectRecent = {
    }).then(function() {
     return randomNetwork(dc, new Date());
    }).then(function(net) {
-     return randomStation(dc, net.networkCode(), new Date());
+     return randomStation(dc, net.networkCode, new Date());
    }).then(function(station) {
-    let host = serviceHost(dc, DS);
-
-    let query = new fdsndataselect.DataSelectQuery()
-      .host(host);
+    let query = createQuery(dc, DS);
     let url = query
-      .networkCode(station.network().networkCode())
-      .stationCode(station.stationCode())
+      .networkCode(station.network.networkCode)
+      .stationCode(station.stationCode)
       .channelCode("SHZ,BHZ")
       .computeStartEnd(null, new Date(), 300, 0)
       .formURL();

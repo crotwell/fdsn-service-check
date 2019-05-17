@@ -35,7 +35,7 @@ import {testDataSelectRecent} from './testDataSelectRecent';
 let fdsnevent = seisplotjs.fdsnevent;
 let fdsnstation = seisplotjs.fdsnstation;
 let fdsndataselect = seisplotjs.fdsndataselect;
-let RSVP = fdsnstation.RSVP;
+let RSVP = seisplotjs.RSVP;
 
 // all tests should be object with testid, testname and test: function(datacenter, d3selector)
 

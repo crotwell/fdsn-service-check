@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect, d3} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport, randomNetwork, randomStation } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testSensitivityUnit = {
   testname: "Sensitvity units valid SI",
@@ -11,7 +10,6 @@ export let testSensitivityUnit = {
   webservices: [ ST ],
   severity: 'opinion',
   test: function(dc) {
-    let host = serviceHost(dc, ST);
     return new RSVP.Promise(function(resolve, reject) {
       if ( ! doesSupport(dc, ST) ) {
         reject(new Error("Unsupported"));
@@ -21,34 +19,31 @@ export let testSensitivityUnit = {
     }).then(function() {
       return randomNetwork(dc, new Date());
     }).then(function(net) {
-      return randomStation(dc, net.networkCode(), new Date());
+      return randomStation(dc, net.networkCode, new Date());
     }).then(function(station) {
-      let query = new fdsnstation.StationQuery()
-        .host(host)
-        .networkCode(station.network().networkCode())
-        .stationCode(station.stationCode()) ;
-      return query.queryChannels()
-        .then(function(nets) {
-          nets.url = query.formURL(fdsnstation.LEVEL_CHANNEL);
-          return nets;
-        });
-    }).then(function(nets) {
+      let query = createQuery(dc, ST)
+        .networkCode(station.network.networkCode)
+        .stationCode(station.stationCode) ;
       return RSVP.hash({
-        "knownUnits": fetch('knownUnits.json').then(function(response) {
+        "query": query,
+        "nets": query.queryChannels()
+        });
+    }).then(function(hash) {
+        hash.knownUnits = fetch('knownUnits.json').then(function(response) {
                         return response.json();
-                      }),
-        "nets": nets
-      });
+                      });
+        hash.url = hash.query.formURL(fdsnstation.LEVEL_CHANNEL);
+        return RSVP.hash(hash);
     }).then(function(hash) {
       console.log("hash knownUnits: "+hash.knownUnits);
         const knownUnits = hash.knownUnits.units;
         const nets = hash.nets;
         console.log("Units: "+knownUnits);
         for (let n of nets) {
-          for (let s of n.stations()) {
+          for (let s of n.stations) {
 console.log("Station: "+s.codes());
-            for (let c of s.channels()) {
-              let cu = c.instrumentSensitivity().inputUnits();
+            for (let c of s.channels) {
+              let cu = c.instrumentSensitivity.inputUnits;
               let found = false;
               for (let u of knownUnits) {
                 if (cu === u) {
@@ -73,7 +68,7 @@ console.log("Station: "+s.codes());
                 throw err;
               }
 
-              cu = c.instrumentSensitivity().outputUnits();
+              cu = c.instrumentSensitivity.outputUnits;
               found = false;
               for (let u of knownUnits) {
                 if (cu === u) {
@@ -88,9 +83,9 @@ console.log("Station: "+s.codes());
           }
         }
         return {
-          text: "Units ok for channels from "+station.codes(),
-          url: channels.url,
-          output: channels
+          text: "Units ok for channels from "+nets[0].stations[0].codes(),
+          url: hash.url,
+          output: nets[0].stations[0].channels
         };
       });
   }

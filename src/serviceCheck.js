@@ -2,14 +2,14 @@
 
 import {allFdsnTests} from './allServiceTests';
 import * as seisplotjs from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport, githubTestURL } from './util';
+import {DS, EV, ST, serviceHost, createQuery, doesSupport, githubTestURL } from './util';
 
 // seisplotjs comes from the seisplotjs standalone bundle
 let d3 = seisplotjs.d3;
 let fdsnevent = seisplotjs.fdsnevent;
 let fdsnstation = seisplotjs.fdsnstation;
 let fdsndataselect = seisplotjs.fdsndataselect;
-let RSVP = fdsnstation.RSVP;
+let RSVP = seisplotjs.RSVP;
 let UNSUPPORTED = "Unsupported";
 let dataCentersURL = "./fdsnDataCenters.json";
 
@@ -215,8 +215,7 @@ function makeTable(fdsn) {
         if ( doesSupport(d, EV)) {
           let aElement = document.createElement("a");
           d3.select(aElement)
-            .attr("href", new fdsnevent.EventQuery()
-                .host(serviceHost(d, EV))
+            .attr("href", createQuery(d, EV)
                 .formBaseURL())
             .attr("class", "supported")
             .text( "Yes" );
@@ -234,8 +233,7 @@ function makeTable(fdsn) {
         if ( doesSupport(d, ST)) {
           let aElement = document.createElement("a");
           d3.select(aElement)
-            .attr("href", new fdsnstation.StationQuery()
-                .host(serviceHost(d, ST))
+            .attr("href", createQuery(d, ST)
                 .formBaseURL())
             .attr("class", "supported")
             .text( "Yes" );
@@ -253,8 +251,7 @@ function makeTable(fdsn) {
         if ( doesSupport(d, DS)) {
           let aElement = document.createElement("a");
           d3.select(aElement)
-            .attr("href", new fdsndataselect.DataSelectQuery()
-                .host(serviceHost(d, DS))
+            .attr("href", createQuery(d, DS)
                 .formBaseURL())
             .attr("class", "supported")
             .text( "Yes" );

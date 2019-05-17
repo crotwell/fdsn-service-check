@@ -1,18 +1,19 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
 import {DS, EV, ST, createQuery, doesSupport } from './util';
 
 
-export let testDataSelectVersion = {
-  testname: "DataSelect Version",
-  testid: "DataSelectVersion",
+export let testEventVersion = {
+  testname: "Event Version",
+  testid: "eventversion",
   description: "Queries the version of the service, success as long as the query returns something",
-  webservices: [ DS ],
+  webservices: [ EV ],
   severity: 'severe',
   test: function(dc) {
-    let query = createQuery(dc, DS);
-    let url = query.formVersionURL();
-    return query.queryVersion().then(function(version) {
+
+    let quakeQuery = createQuery(dc, EV);
+    let url = quakeQuery.formVersionURL();
+    return quakeQuery.queryVersion().then(function(version) {
       return {
         text: version,
         output: version,

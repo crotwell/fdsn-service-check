@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport, randomNetwork, randomStation } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testChannels = {
   testname: "Channels",
@@ -20,12 +19,11 @@ export let testChannels = {
     }).then(function() {
       return randomNetwork(dc);
     }).then(function(net) {
-      return randomStation(dc, net.networkCode());
+      return randomStation(dc, net.networkCode);
     }).then(function(sta) {
-      let chanQuery = new fdsnstation.StationQuery()
-        .host(serviceHost(dc, ST))
-        .networkCode(sta.network().networkCode())
-        .stationCode(sta.stationCode());
+      let chanQuery = createQuery(dc, ST)
+        .networkCode(sta.network.networkCode)
+        .stationCode(sta.stationCode);
       return chanQuery.queryChannels()
         .then(function(channels) {
           channels.url = chanQuery.formURL(fdsnstation.LEVEL_CHANNEL);

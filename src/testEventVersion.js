@@ -1,6 +1,6 @@
 
 import {fdsnevent}      from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
 
 export let testEventVersion = {
@@ -10,10 +10,7 @@ export let testEventVersion = {
   webservices: [ EV ],
   severity: 'severe',
   test: function(dc) {
-    let host = serviceHost(dc, EV);
-
-    let quakeQuery = new fdsnevent.EventQuery()
-      .host(host);
+    let quakeQuery = createQuery(dc, EV);
     let url = quakeQuery.formVersionURL();
     return quakeQuery.queryVersion().then(function(version) {
       return {
@@ -27,4 +24,3 @@ export let testEventVersion = {
     });
   }
 };
-

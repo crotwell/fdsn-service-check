@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testDateIncludeZ = {
   testname: "Date Ends w/ Z",
@@ -19,9 +18,7 @@ export let testDateIncludeZ = {
       }
     }).then(function() {
       let daysAgo = 1;
-      let host = serviceHost(dc, EV);
-      let quakeQuery = new fdsnevent.EventQuery()
-        .host(host)
+      let quakeQuery = createQuery(dc, EV)
         .startTime(new Date(new Date().getTime()-86400*daysAgo*1000))
         .endTime(new Date());
       let url = quakeQuery.formURL();
@@ -34,7 +31,7 @@ export let testDateIncludeZ = {
         let failureEvent = null;
         let otimeStr = null;
         if (eventArray.every(function(q, i) {
-          otimeStr = quakeQuery._grabFirstElText(quakeQuery._grabFirstEl(quakeQuery._grabFirstEl(qml, 'origin'), 'time'),'value');
+          otimeStr = fdsnevent.util._grabFirstElText(fdsnevent.util._grabFirstEl(fdsnevent.util._grabFirstEl(qml, 'origin'), 'time'),'value');
           if (otimeStr ) {
             if (otimeStr.charAt(otimeStr.length-1) === 'Z') {
               return true;
@@ -64,4 +61,3 @@ export let testDateIncludeZ = {
     });
   }
 };
-

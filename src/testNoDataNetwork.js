@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testNoDataNetwork = {
   testname: "NoData Networks",
@@ -18,10 +17,7 @@ export let testNoDataNetwork = {
       resolve(null);
     }
    }).then(function() {
-    let host = serviceHost(dc, ST);
-
-    let query = new fdsnstation.StationQuery()
-      .host(host)
+    let query = createQuery(dc, ST)
       .networkCode("xx");
     let url = query.formURL(fdsnstation.LEVEL_NETWORK);
     return query.queryNetworks().then(function(networks) {
@@ -41,4 +37,3 @@ export let testNoDataNetwork = {
     });
   }
 };
-

@@ -9,10 +9,12 @@ module.exports = {
       "browser": true
     },
     "parserOptions": {
-        "ecmaVersion": 6,
+        "ecmaVersion": 2017,
         "sourceType": "module",
     },
     "rules": {
-      "semi": ["error", "always"]
+      "semi": ["error", "always"],
+      "no-unused-vars": "off",
+      "no-console": "off"
     }
 };

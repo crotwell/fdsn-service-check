@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testNoData204DataSelect = {
   testname: "DataSelect 204",
@@ -18,9 +17,7 @@ export let testNoData204DataSelect = {
       resolve(null);
     }
    }).then(function() {
-    let host = serviceHost(dc, DS);
-    let query = new fdsndataselect.DataSelectQuery()
-      .host(host);
+    let query = createQuery(dc, DS);
     let url = query
       .networkCode("XX")
       .stationCode("ABC")

@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testLastDay = {
   testname: "Last Day",
@@ -19,9 +18,7 @@ export let testLastDay = {
     }
    }).then(function() {
     let daysAgo = 1;
-    let host = serviceHost(dc, EV);
-    let quakeQuery = new fdsnevent.EventQuery()
-      .host(host)
+    let quakeQuery = createQuery(dc, EV)
       .startTime(new Date(new Date().getTime()-86400*daysAgo*1000))
       .endTime(new Date());
     let url = quakeQuery.formURL();
@@ -38,4 +35,3 @@ export let testLastDay = {
     });
   }
 };
-

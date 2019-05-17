@@ -1,16 +1,18 @@
 {
   "name": "fdsn-service-check",
-  "version": "1.0.0-alpha.1",
+  "version": "2.0.0-alpha.1",
   "description": "Javascript library for testing FDSN web services.",
   "main": "lib/index.js",
   "dependencies": {
-    "seisplotjs": "^1.2.0-alpha.1"
+    "eslint-plugin-flowtype": "^3.9.0",
+    "eslint-plugin-node": "^9.0.1",
+    "seisplotjs": "^2.0.0"
   },
   "scripts": {
     "lint": "eslint 'src/**/*.js' ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "babel --presets env -d lib/ src/",
-    "standalone": "browserify src/*.js --standalone servicecheck -o servicecheck_${npm_package_version}_standalone.js -t [ babelify ]",
+    "compile": "babel -d lib/ src/",
+    "standalone": "browserify src/*.js --standalone servicecheck -o servicecheck_${npm_package_version}_standalone.js -t [ babelify --presets [ @babel/preset-env ] ]",
     "prepare": "npm run compile"
   },
   "repository": {
@@ -32,21 +34,29 @@
   },
   "homepage": "https://github.com/crotwell/fdsn-service-check",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babelify": "^8.0.0",
-    "eslint": "^4.16.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "qunit": "^1.0.0"
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0"
   },
   "babel": {
     "presets": [
-      "env"
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "browsers": [
+              "last 2 versions"
+            ],
+            "node": "current"
+          }
+        }
+      ]
     ]
   }
 }

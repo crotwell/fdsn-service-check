@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport, randomNetwork, randomStation } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testStations = {
   testname: "Stations",
@@ -20,7 +19,7 @@ export let testStations = {
     }).then(function() {
       return randomNetwork(dc);
     }).then(function(net) {
-      return randomStation(dc, net.networkCode());
+      return randomStation(dc, net.networkCode);
     }).then(function(sta) {
       return {
         text: "Found "+sta.codes(),

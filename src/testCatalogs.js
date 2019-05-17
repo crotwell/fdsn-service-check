@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testCatalogs = {
   testname: "Catalogs",
@@ -15,12 +14,10 @@ export let testCatalogs = {
     if ( ! doesSupport(dc, EV) ) {
       reject(new Error("Unsupported"));
     } else {
-      resolve(null);
+      resolve(dc);
     }
-   }).then(function() {
-    let host = serviceHost(dc, EV);
-    let quakeQuery = new fdsnevent.EventQuery()
-      .host(host);
+  }).then(function(dc) {
+    let quakeQuery = createQuery(dc, EV);
     let url = quakeQuery.formCatalogsURL();
     return quakeQuery.queryCatalogs().then(function(catalogs) {
       return {

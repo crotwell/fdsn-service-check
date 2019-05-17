@@ -1,8 +1,6 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
-
-let RSVP = fdsnstation.RSVP;
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport } from './util';
 
 export let testContributors = {
   testname: "Contributors",
@@ -18,9 +16,7 @@ export let testContributors = {
       resolve(null);
     }
    }).then(function() {
-    let host = serviceHost(dc, EV);
-    let quakeQuery = new fdsnevent.EventQuery()
-      .host(host);
+    let quakeQuery = createQuery(dc, EV);
     let url = quakeQuery.formContributorsURL();
     return quakeQuery.queryContributors().then(function(contributors) {
       return {
@@ -35,4 +31,3 @@ export let testContributors = {
     });
   }
 };
-

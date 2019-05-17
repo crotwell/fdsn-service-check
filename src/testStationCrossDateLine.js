@@ -1,8 +1,7 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect} from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport, randomNetwork, randomStation } from './util';
+import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
-let RSVP = fdsnstation.RSVP;
 
 export let testStationCrossDateLine = {
   testname: "Station Cross Date Line",
@@ -20,17 +19,15 @@ export let testStationCrossDateLine = {
     }).then(function() {
       return randomNetwork(dc);
     }).then(function(net) {
-      return randomStation(dc, net.networkCode());
+      return randomStation(dc, net.networkCode);
    }).then(function(randomStation) {
-    let host = serviceHost(dc, ST);
-      let query = new fdsnstation.StationQuery()
-    let stationQuery = new fdsnstation.StationQuery();
-      stationQuery.host(host)
-      .networkCode(randomStation.network().networkCode())
-      .minLat(randomStation.latitude()-1)
-      .maxLat(randomStation.latitude()+1)
-      .minLon(randomStation.longitude()+2)
-      .maxLon(randomStation.longitude()+1);
+      let query = createQuery(dc, ST);
+    let stationQuery = createQuery(dc, ST)
+      .networkCode(randomStation.network.networkCode)
+      .minLat(randomStation.latitude-1)
+      .maxLat(randomStation.latitude+1)
+      .minLon(randomStation.longitude+2)
+      .maxLon(randomStation.longitude+1);
     let url = stationQuery.formURL(fdsnstation.LEVEL_STATION);
     return new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();
@@ -68,4 +65,3 @@ export let testStationCrossDateLine = {
     });
   }
 };
-
