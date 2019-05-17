@@ -433,6 +433,31 @@
           "versions": [ 1 ]
         }
       ]
+    },
+    {
+      "id": "AusPass",
+      "name": "AusPass, Australia",
+      "website": "http://auspass.edu.au/",
+      "email": "",
+      "host": "auspass.edu.au",
+      "region": "Oceania",
+      "supports": [
+        {
+          "type": "fdsn-event",
+          "versions": [ 1 ],
+          "port": 8080
+        },
+        {
+          "type": "fdsn-station",
+          "versions": [ 1 ],
+          "port": 8080
+        },
+        {
+          "type": "fdsnws-dataselect",
+          "versions": [ 1 ],
+          "port": 8080
+        }
+      ]
     }
   ]
 }
