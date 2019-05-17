@@ -167,7 +167,7 @@
       "name": "ICGC, Catalan Seismic Network (CA)",
       "website": "http://www.icgc.cat/en/xarxasismica",
       "email": "",
-      "host": "http://www.icgc.cat",
+      "host": "ws.icgc.cat",
       "region": "Europe",
       "supports": [
         {
