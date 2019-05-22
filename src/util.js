@@ -1,5 +1,6 @@
 import * as seisplotjs from 'seisplotjs';
 
+let fdsnavailability = seisplotjs.fdsnavailability;
 let fdsnevent = seisplotjs.fdsnevent;
 let fdsnstation = seisplotjs.fdsnstation;
 let fdsndataselect = seisplotjs.fdsndataselect;
@@ -36,7 +37,9 @@ export function servicePort(dc, type) {
 
 export function createQuery(dc, type) {
   let q = null;
-  if (type === DS) {
+  if (type === AV) {
+    q = new fdsnacailability.AvailabilityQuery();
+  } else if (type === DS) {
     q = new fdsndataselect.DataSelectQuery();
   } else if (type === EV) {
     q = new fdsnevent.EventQuery();
@@ -50,6 +53,7 @@ export function createQuery(dc, type) {
   return q;
 }
 
+export const AV = "fdsn-availability";
 export const DS = "fdsnws-dataselect";
 export const EV = "fdsn-event";
 export const ST = "fdsn-station";

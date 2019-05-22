@@ -2,10 +2,11 @@
 
 import {allFdsnTests} from './allServiceTests';
 import * as seisplotjs from 'seisplotjs';
-import {DS, EV, ST, serviceHost, createQuery, doesSupport, githubTestURL } from './util';
+import {AV, DS, EV, ST, serviceHost, createQuery, doesSupport, githubTestURL } from './util';
 
 // seisplotjs comes from the seisplotjs standalone bundle
 let d3 = seisplotjs.d3;
+let fdsnavailability = seisplotjs.fdsnavailability;
 let fdsnevent = seisplotjs.fdsnevent;
 let fdsnstation = seisplotjs.fdsnstation;
 let fdsndataselect = seisplotjs.fdsndataselect;
@@ -187,6 +188,7 @@ function makeTable(fdsn) {
     table = d3.select(".datacenters").append("table");
     let thr = table.append("thead").append("tr");
     thr.append("th").text("Name");
+    thr.append("th").text("Availability");
     thr.append("th").text("Event");
     thr.append("th").text("Station");
     thr.append("th").text("DataSelect");
@@ -210,6 +212,24 @@ function makeTable(fdsn) {
     }).html(function(d) {
       return d.name;
     });
+    tr.append("td")
+      .append(function(d) {
+        if ( doesSupport(d, AV)) {
+          let aElement = document.createElement("a");
+          d3.select(aElement)
+            .attr("href", createQuery(d, AV)
+                .formBaseURL())
+            .attr("class", "supported")
+            .text( "Yes" );
+          return aElement;
+        } else {
+          let spanElement = document.createElement("span");
+          d3.select(spanElement)
+            .attr("class", "unsupported")
+            .text( "No");
+          return spanElement;
+        }
+      });
     tr.append("td")
       .append(function(d) {
         if ( doesSupport(d, EV)) {
@@ -291,7 +311,7 @@ console.log("makeTestsTable: fdsn"+fdsn.datacenters.length);
     table.append("tbody");
   }
 
-  let allTests = inTests.fdsnEventTests.concat(inTests.fdsnStationTests).concat(inTests.fdsnDataTests);
+  let allTests = inTests.fdsnAvailabilityTests.concat(inTests.fdsnEventTests).concat(inTests.fdsnStationTests).concat(inTests.fdsnDataTests);
 
   let tableData = table.select("tbody")
     .selectAll("tr")

@@ -10,7 +10,7 @@
    <h3>FDSN Web Service Check</h3>
 <p>Check <a href="http://www.fdsn.org/webservices/datacenters/">known FDSN web services.</a></p>
 
-<p>FDSN web service <a href="http://www.fdsn.org/webservices/FDSN-WS-Specifications-1.1.pdf">specification</a>.</p>
+<p>FDSN web service <a href="http://www.fdsn.org/webservices">specification</a>.</p>
 
 <p>This runs tests against FDSN web serices from within the browser. The means that we are making XMLHttpRequest from javascript that is loaded from our web server to the web server hosting the web service. If that server is not configured to allow queries from pages loaded from other sites, the request will fail. This is true even if the URL is accessible and working when directly entered into the browser. We believe that FDSN web services should in general be available in this manner. See the <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">Wikipedia</a> article and <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">Mozilla</a> and <a href="https://www.w3.org/TR/cors/">W3C</a> for more information.</p>
 
@@ -20,14 +20,14 @@
 
 <p>Source code is at <a href="https://github.com/crotwell/fdsn-service-check">GitHub</a> and uses <a href="https://github.com/crotwell/seisplotjs">seisplotjs</a></p>
 
-<p>Click RUN to run a single test on all data centers, results will appear below. You can also run <a href="serviceCheck.html">multiple tests against a single data center.</a></p>
+<p>Click RUN to run a single test on all data centers, <a href="#results">results will appear below</a>. You can also run <a href="serviceCheck.html">multiple tests against a single data center.</a></p>
 
 <div class="testlist">
 <h3>Tests</h3>
 <p>...loading tests.</p>
 </div>
 
-<div class="results">
+<div class="results"  id="results">
 <h3>Results:</h3>
 <p>Javascript must be enabled to view the results.</p>
 </div>

@@ -1,7 +1,9 @@
 
 import * as seisplotjs from 'seisplotjs';
-import {DS, EV, ST, serviceHost, doesSupport } from './util';
+import {AV, DS, EV, ST, serviceHost, doesSupport } from './util';
 
+import {testAvailabilityVersion} from './testAvailabilityVersion';
+import {testNoData204Availability} from './testNoData204Availability';
 import {testEventVersion} from './testEventVersion';
 import {testStationVersion} from './testStationVersion';
 import {testDataSelectVersion} from './testDataSelectVersion';
@@ -32,6 +34,7 @@ import {testDataSelectNoData} from './testDataSelectNoData';
 import {testDataSelectRecent} from './testDataSelectRecent';
 
 
+let fdsnavailability = seisplotjs.fdsnavailability;
 let fdsnevent = seisplotjs.fdsnevent;
 let fdsnstation = seisplotjs.fdsnstation;
 let fdsndataselect = seisplotjs.fdsndataselect;
@@ -43,14 +46,18 @@ let RSVP = seisplotjs.RSVP;
 
 
 let tests = {
+     fdsnAvailabilityTests: [testAvailabilityVersion, testNoData204Availability],
      fdsnEventTests: [ testEventVersion, testNoData204Event, testNoDataEvent, testLastDay, testCatalogs, testContributors, testEventFractionalSeconds, testEventFromBestGuessEventId, testLastDayQueryWithZ, testDateIncludeZ, testEventCrossDateLine, testEventFromPublicID  ],
      fdsnStationTests: [ testStationVersion, testNoData204Station, testNoDataNetwork, testNetworks, testStations, testChannels, testCommaStations, testSimpleAndWindowTimes, testStationQueryWithZ, testStationDateIncludeZ, testStationCrossDateLine, testSensitivityUnit ],
      fdsnDataTests: [ testDataSelectVersion, testNoData204DataSelect, testDataSelectNoData, testDataSelectRecent ]
  };
 
-tests.all = tests.fdsnEventTests.concat(tests.fdsnStationTests).concat(tests.fdsnDataTests);
+tests.all = tests.fdsnAvailabilityTests.concat(tests.fdsnEventTests).concat(tests.fdsnStationTests).concat(tests.fdsnDataTests);
 
 let notVersionTest = {
+     fdsnAvailabilityTests: tests.fdsnAvailabilityTests.filter(function(d) {
+         return d.testid.indexOf("version") === -1;
+     }),
      fdsnEventTests: tests.fdsnEventTests.filter(function(d) {
          return d.testid.indexOf("version") === -1;
      }),
@@ -67,6 +74,7 @@ let justOneTest = {
      fdsnDataTests: [ ]
 };
 let justVersionTest = {
+     fdsnAvailabilityTests: [ testAvailabilityVersion ],
      fdsnEventTests: [ testEventVersion ],
      fdsnStationTests: [ testStationVersion ],
      fdsnDataTests: [ testDataSelectVersion ]
