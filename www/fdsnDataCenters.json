@@ -444,18 +444,15 @@
       "supports": [
         {
           "type": "fdsn-event",
-          "versions": [ 1 ],
-          "port": 8080
+          "versions": [ 1 ]
         },
         {
           "type": "fdsn-station",
-          "versions": [ 1 ],
-          "port": 8080
+          "versions": [ 1 ]
         },
         {
           "type": "fdsnws-dataselect",
-          "versions": [ 1 ],
-          "port": 8080
+          "versions": [ 1 ]
         }
       ]
     }
