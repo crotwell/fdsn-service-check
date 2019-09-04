@@ -32,6 +32,8 @@ import {testSensitivityUnit} from './testSensitivityUnit';
 import {testNoData204DataSelect} from './testNoData204DataSelect';
 import {testDataSelectNoData} from './testDataSelectNoData';
 import {testDataSelectRecent} from './testDataSelectRecent';
+import {testDataSelectFormat} from './testDataSelectFormat';
+
 
 
 let fdsnavailability = seisplotjs.fdsnavailability;
@@ -49,7 +51,7 @@ let tests = {
      fdsnAvailabilityTests: [testAvailabilityVersion, testNoData204Availability],
      fdsnEventTests: [ testEventVersion, testNoData204Event, testNoDataEvent, testLastDay, testCatalogs, testContributors, testEventFractionalSeconds, testEventFromBestGuessEventId, testLastDayQueryWithZ, testDateIncludeZ, testEventCrossDateLine, testEventFromPublicID  ],
      fdsnStationTests: [ testStationVersion, testNoData204Station, testNoDataNetwork, testNetworks, testStations, testChannels, testCommaStations, testSimpleAndWindowTimes, testStationQueryWithZ, testStationDateIncludeZ, testStationCrossDateLine, testSensitivityUnit ],
-     fdsnDataTests: [ testDataSelectVersion, testNoData204DataSelect, testDataSelectNoData, testDataSelectRecent ]
+     fdsnDataTests: [ testDataSelectVersion, testNoData204DataSelect, testDataSelectNoData, testDataSelectRecent, testDataSelectFormat ]
  };
 
 tests.all = tests.fdsnAvailabilityTests.concat(tests.fdsnEventTests).concat(tests.fdsnStationTests).concat(tests.fdsnDataTests);

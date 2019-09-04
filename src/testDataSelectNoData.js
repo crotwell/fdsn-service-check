@@ -25,7 +25,7 @@ export let testDataSelectNoData = {
       .channelCode("XXX")
       .computeStartEnd(new Date(Date.UTC(1980,1,1,0,0,0)), null, 300, 0)
       .formURL();
-    return query.query().then(function(miniseed) {
+    return query.queryDataRecords().then(function(miniseed) {
       if (miniseed.length > 0) {
         throw new Error("Should be no data, but "+miniseed.length+" miniseed records.");
       } else {

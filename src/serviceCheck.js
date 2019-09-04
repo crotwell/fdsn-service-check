@@ -33,6 +33,7 @@ fetch(dataCentersURL)
   }).catch(function(error) {
     console.assert(false, error);
     console.log(error);
+    console.log("fetch fdsn datacenters does not work for localhost and/or file loading, must be from web server due to security I think")
     makeErrorMessage(error);
   });
 

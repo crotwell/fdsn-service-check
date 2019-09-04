@@ -3,10 +3,10 @@ import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
 import {DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
 
-export let testDataSelectRecent = {
-  testname: "Recent Data",
-  testid: "DataSelectRecent",
-  description: "Attempts to make a dataselect query by first querying for networks, then stations within the a random network and then using a random station to request the last 300 seconds for a SHZ,BHZ channel. Success as long as the query returns, even with an empty result.",
+export let testDataSelectFormat = {
+  testname: "Format as miniseed",
+  testid: "DataSelectFormat",
+  description: "Attempts to make a dataselect query including format=miniseed, by first querying for networks, then stations within the a random network and then using a random station to request the last 300 seconds for a SHZ,BHZ channel. Success as long as the query returns, even with an empty result.",
   webservices: [ ST, DS ],
   severity: 'severe',
   test: function(dc) {
@@ -27,6 +27,7 @@ export let testDataSelectRecent = {
       .stationCode(station.stationCode)
       .channelCode("SHZ,BHZ")
       .computeStartEnd(null, new Date(), 300, 0)
+      .format("miniseed")
       .formURL();
     return query.queryDataRecords().then(function(miniseed) {
       return {
