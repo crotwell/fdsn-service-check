@@ -1,5 +1,5 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {fdsnevent, fdsnstation, fdsndataselect, util, RSVP} from 'seisplotjs';
 import {DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
 
@@ -26,7 +26,7 @@ export let testDataSelectRecent = {
       .networkCode(station.network.networkCode)
       .stationCode(station.stationCode)
       .channelCode("SHZ,BHZ")
-      .computeStartEnd(null, new Date(), 300, 0)
+      .timeWindow(new util.StartEndDuration(null, null, 300))
       .formURL();
     return query.queryDataRecords().then(function(miniseed) {
       return {

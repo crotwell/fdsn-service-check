@@ -1,5 +1,5 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {fdsnevent, fdsnstation, fdsndataselect, quakeml, RSVP} from 'seisplotjs';
 import {DS, EV, ST, createQuery, doesSupport } from './util';
 
 
@@ -31,7 +31,7 @@ export let testDateIncludeZ = {
         let failureEvent = null;
         let otimeStr = null;
         if (eventArray.every(function(q, i) {
-          otimeStr = fdsnevent.util._grabFirstElText(fdsnevent.util._grabFirstEl(fdsnevent.util._grabFirstEl(qml, 'origin'), 'time'),'value');
+          otimeStr = quakeml.parseUtil._grabFirstElText(quakeml.parseUtil._grabFirstEl(quakeml.parseUtil._grabFirstEl(qml, 'origin'), 'time'),'value');
           if (otimeStr ) {
             if (otimeStr.charAt(otimeStr.length-1) === 'Z') {
               return true;

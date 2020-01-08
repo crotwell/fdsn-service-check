@@ -1,5 +1,5 @@
 
-import {fdsnevent, fdsnstation, fdsndataselect, RSVP} from 'seisplotjs';
+import {fdsnevent, fdsnstation, fdsndataselect, util, RSVP} from 'seisplotjs';
 import {DS, EV, ST, createQuery, doesSupport } from './util';
 
 
@@ -23,7 +23,7 @@ export let testDataSelectNoData = {
       .stationCode("ABC")
       .locationCode("99")
       .channelCode("XXX")
-      .computeStartEnd(new Date(Date.UTC(1980,1,1,0,0,0)), null, 300, 0)
+      .timeWindow(new util.StartEndDuration('1980-01-01T00:00:00', null, 300))
       .formURL();
     return query.queryDataRecords().then(function(miniseed) {
       if (miniseed.length > 0) {
