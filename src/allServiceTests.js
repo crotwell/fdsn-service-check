@@ -21,6 +21,8 @@ import {testContributors} from './testContributors';
 import {testNoData204Station} from './testNoData204Station';
 import {testNoDataNetwork} from './testNoDataNetwork';
 import {testNetworks} from './testNetworks';
+import {testNetworksIncludeAvailability} from './testNetworksIncludeAvailability';
+import {testNetworksIncludeRestricted} from './testNetworksIncludeRestricted';
 import {testStations} from './testStations';
 import {testCommaStations} from './testCommaStations';
 import {testSimpleAndWindowTimes} from './testSimpleAndWindowTimes';
@@ -50,7 +52,7 @@ let RSVP = seisplotjs.RSVP;
 let tests = {
      fdsnAvailabilityTests: [testAvailabilityVersion, testNoData204Availability],
      fdsnEventTests: [ testEventVersion, testNoData204Event, testNoDataEvent, testLastDay, testCatalogs, testContributors, testEventFractionalSeconds, testEventFromBestGuessEventId, testLastDayQueryWithZ, testDateIncludeZ, testEventCrossDateLine, testEventFromPublicID  ],
-     fdsnStationTests: [ testStationVersion, testNoData204Station, testNoDataNetwork, testNetworks, testStations, testChannels, testCommaStations, testSimpleAndWindowTimes, testStationQueryWithZ, testStationDateIncludeZ, testStationCrossDateLine, testSensitivityUnit ],
+     fdsnStationTests: [ testStationVersion, testNoData204Station, testNoDataNetwork, testNetworks, testStations, testChannels, testCommaStations, testSimpleAndWindowTimes, testNetworksIncludeAvailability, testNetworksIncludeRestricted, testStationQueryWithZ, testStationDateIncludeZ, testStationCrossDateLine, testSensitivityUnit ],
      fdsnDataTests: [ testDataSelectVersion, testNoData204DataSelect, testDataSelectNoData, testDataSelectRecent, testDataSelectFormat ]
  };
 
