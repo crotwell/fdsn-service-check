@@ -25,6 +25,7 @@ import {testNetworksIncludeAvailability} from './testNetworksIncludeAvailability
 import {testNetworksIncludeRestricted} from './testNetworksIncludeRestricted';
 import {testStations} from './testStations';
 import {testCommaStations} from './testCommaStations';
+import {testStationNowEndTime} from './testStationNowEndTime.js';
 import {testSimpleAndWindowTimes} from './testSimpleAndWindowTimes';
 import {testStationQueryWithZ} from './testStationQueryWithZ';
 import {testStationDateIncludeZ} from './testStationDateIncludeZ';
@@ -52,7 +53,7 @@ let RSVP = seisplotjs.RSVP;
 let tests = {
      fdsnAvailabilityTests: [testAvailabilityVersion, testNoData204Availability],
      fdsnEventTests: [ testEventVersion, testNoData204Event, testNoDataEvent, testLastDay, testCatalogs, testContributors, testEventFractionalSeconds, testEventFromBestGuessEventId, testLastDayQueryWithZ, testDateIncludeZ, testEventCrossDateLine, testEventFromPublicID  ],
-     fdsnStationTests: [ testStationVersion, testNoData204Station, testNoDataNetwork, testNetworks, testStations, testChannels, testCommaStations, testSimpleAndWindowTimes, testNetworksIncludeAvailability, testNetworksIncludeRestricted, testStationQueryWithZ, testStationDateIncludeZ, testStationCrossDateLine, testSensitivityUnit ],
+     fdsnStationTests: [ testStationVersion, testNoData204Station, testNoDataNetwork, testNetworks, testStations, testChannels, testCommaStations, testStationNowEndTime, testSimpleAndWindowTimes, testNetworksIncludeAvailability, testNetworksIncludeRestricted, testStationQueryWithZ, testStationDateIncludeZ, testStationCrossDateLine, testSensitivityUnit ],
      fdsnDataTests: [ testDataSelectVersion, testNoData204DataSelect, testDataSelectNoData, testDataSelectRecent, testDataSelectFormat ]
  };
 
@@ -72,19 +73,25 @@ let notVersionTest = {
          return d.testid.indexOf("version") === -1;
      })
  };
+notVersionTest.all = notVersionTest.fdsnAvailabilityTests.concat(notVersionTest.fdsnEventTests).concat(notVersionTest.fdsnStationTests).concat(notVersionTest.fdsnDataTests);
+
 let justOneTest = {
-     fdsnEventTests: [ testEventFromBestGuessEventId,  testEventCrossDateLine],
-     fdsnStationTests: [ testStationCrossDateLine ],
+     fdsnAvailabilityTests: [  ],
+     fdsnEventTests: [ ],
+     fdsnStationTests: [ testStationNowEndTime ],
      fdsnDataTests: [ ]
 };
+justOneTest.all = justOneTest.fdsnAvailabilityTests.concat(justOneTest.fdsnEventTests).concat(justOneTest.fdsnStationTests).concat(justOneTest.fdsnDataTests);
+
 let justVersionTest = {
      fdsnAvailabilityTests: [ testAvailabilityVersion ],
      fdsnEventTests: [ testEventVersion ],
      fdsnStationTests: [ testStationVersion ],
      fdsnDataTests: [ testDataSelectVersion ]
 };
+justVersionTest.all = justVersionTest.fdsnAvailabilityTests.concat(justVersionTest.fdsnEventTests).concat(justVersionTest.fdsnStationTests).concat(justVersionTest.fdsnDataTests);
 
-//let out = notVersionTest;
-//let out = justVersionTest;
-//let out = justOneTest;
-export let allFdsnTests = tests;
+//export const allFdsnTests = notVersionTest;
+//export const allFdsnTests = justVersionTest;
+//export const allFdsnTests =  justOneTest;
+export const allFdsnTests = tests;
