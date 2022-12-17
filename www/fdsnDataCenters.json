@@ -201,9 +201,9 @@
     {
       "id": "INGV",
       "name": "INGV",
-      "website": "http://webservices.rm.ingv.it/",
+      "website": "http://webservices.ingv.it/",
       "email": "",
-      "host": "webservices.rm.ingv.it",
+      "host": "webservices.ingv.it",
       "region": "Europe",
       "supports": [
         {
