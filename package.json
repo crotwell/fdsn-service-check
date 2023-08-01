@@ -7,7 +7,7 @@
     "@babel/runtime": "^7.16.7",
     "eslint-plugin-flowtype": "^8.0.3",
     "eslint-plugin-node": "^11.1.0",
-    "seisplotjs": "^2.0.1"
+    "seisplotjs": "^3.0.0"
   },
   "scripts": {
     "lint": "eslint 'src/**/*.js' ",
