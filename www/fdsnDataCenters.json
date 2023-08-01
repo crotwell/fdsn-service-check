@@ -455,6 +455,28 @@
           "versions": [ 1 ]
         }
       ]
+    },
+    {
+      "id": "Geonet",
+      "name": "GeoNet, New Zealand",
+      "website": "http://www.geonet.org.nz/",
+      "email": "",
+      "host": "service.geonet.org.nz",
+      "region": "Oceania",
+      "supports": [
+        {
+          "type": "fdsn-event",
+          "versions": [ 1 ]
+        },
+        {
+          "type": "fdsn-station",
+          "versions": [ 1 ]
+        },
+        {
+          "type": "fdsnws-dataselect",
+          "versions": [ 1 ]
+        }
+      ]
     }
   ]
 }
