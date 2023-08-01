@@ -1,6 +1,6 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs'
-import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util'
+import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
 export const testStationCrossDateLine = {
   testname: 'Station Cross Date Line',
@@ -11,30 +11,30 @@ export const testStationCrossDateLine = {
   test: function (dc) {
     return new RSVP.Promise(function (resolve, reject) {
       if (!doesSupport(dc, ST)) {
-        reject(new Error('Unsupported'))
+        reject(new Error('Unsupported'));
       } else {
-        resolve(null)
+        resolve(null);
       }
     }).then(function () {
-      return randomNetwork(dc)
+      return randomNetwork(dc);
     }).then(function (net) {
-      return randomStation(dc, net.networkCode)
+      return randomStation(dc, net.networkCode);
     }).then(function (randomStation) {
-      const query = createQuery(dc, ST)
+      const query = createQuery(dc, ST);
       const stationQuery = createQuery(dc, ST)
         .networkCode(randomStation.network.networkCode)
         .minLat(randomStation.latitude - 1)
         .maxLat(randomStation.latitude + 1)
         .minLon(randomStation.longitude + 2)
-        .maxLon(randomStation.longitude + 1)
-      const url = stationQuery.formURL(fdsnstation.LEVEL_STATION)
+        .maxLon(randomStation.longitude + 1);
+      const url = stationQuery.formURL(fdsnstation.LEVEL_STATION);
       return new Promise(function (resolve, reject) {
-        const client = new XMLHttpRequest()
-        client.open('GET', url)
-        client.onreadystatechange = handler
-        client.responseType = 'document'
-        client.setRequestHeader('Accept', 'application/xml')
-        client.send()
+        const client = new XMLHttpRequest();
+        client.open('GET', url);
+        client.onreadystatechange = handler;
+        client.responseType = 'document';
+        client.setRequestHeader('Accept', 'application/xml');
+        client.send();
 
         function handler () {
           if (this.readyState === this.DONE) {
@@ -44,23 +44,23 @@ export const testStationCrossDateLine = {
                 text: 'Response OK ',
                 url: url,
                 output: this.responseXML
-              })
+              });
             } else if (this.status === 404 || this.status === 204) {
-              reject(new Error('Should be 200 , but received no data, ' + this.status))
+              reject(new Error('Should be 200 , but received no data, ' + this.status));
             } else if (this.status === 400) {
-              reject(new Error('Bad request, ' + this.status))
+              reject(new Error('Bad request, ' + this.status));
             } else {
-              const error = new Error('Unexpected http status code: ' + this.status)
-              error.status = this.status
-              error.statusText = this.statusText
-              reject(error)
+              const error = new Error('Unexpected http status code: ' + this.status);
+              error.status = this.status;
+              error.statusText = this.statusText;
+              reject(error);
             }
           }
         }
       }).catch(function (err) {
-        if (!err.url) { err.url = url }
-        throw err
-      })
-    })
+        if (!err.url) { err.url = url; }
+        throw err;
+      });
+    });
   }
-}
+};

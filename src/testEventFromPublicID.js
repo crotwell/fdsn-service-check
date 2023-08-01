@@ -1,6 +1,6 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs'
-import { DS, EV, ST, createQuery, doesSupport } from './util'
+import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { DS, EV, ST, createQuery, doesSupport } from './util';
 
 export const testEventFromPublicID = {
   testname: 'eventid=publicID',
@@ -11,38 +11,38 @@ export const testEventFromPublicID = {
   test: function (dc) {
     return new RSVP.Promise(function (resolve, reject) {
       if (!doesSupport(dc, EV)) {
-        reject(new Error('Unsupported'))
+        reject(new Error('Unsupported'));
       } else {
-        resolve(null)
+        resolve(null);
       }
     }).then(function () {
-      const daysAgo = 0.5
+      const daysAgo = 0.5;
       const quakeQuery = createQuery(dc, EV)
         .startTime(new Date(new Date().getTime() - 86400 * daysAgo * 1000))
-        .endTime(new Date())
-      let url = quakeQuery.formURL()
+        .endTime(new Date());
+      let url = quakeQuery.formURL();
       return quakeQuery.query().then(function (quakes) {
         if (quakes.length == 0) {
-          throw new Error('No quakes returned')
+          throw new Error('No quakes returned');
         }
         const singleQuakeQuery = createQuery(dc, EV)
-          .eventId(encodeURIComponent(quakes[0].publicId))
-        url = singleQuakeQuery.formURL()
-        return singleQuakeQuery.query()
+          .eventId(encodeURIComponent(quakes[0].publicId));
+        url = singleQuakeQuery.formURL();
+        return singleQuakeQuery.query();
       }).then(function (singleQuake) {
         if (singleQuake.length === 1) {
           return {
             text: 'Found ' + singleQuake[0].time(),
             url: url,
             output: singleQuake
-          }
+          };
         } else {
-          throw new Error('Expect 1 event, received ' + singleQuake.length)
+          throw new Error('Expect 1 event, received ' + singleQuake.length);
         }
       }).catch(function (err) {
-        if (!err.url) { err.url = url }
-        throw err
-      })
-    })
+        if (!err.url) { err.url = url; }
+        throw err;
+      });
+    });
   }
-}
+};

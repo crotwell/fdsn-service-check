@@ -1,6 +1,6 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs'
-import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util'
+import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
 export const testStations = {
   testname: 'Stations',
@@ -11,20 +11,20 @@ export const testStations = {
   test: function (dc) {
     return new RSVP.Promise(function (resolve, reject) {
       if (!doesSupport(dc, ST)) {
-        reject(new Error('Unsupported'))
+        reject(new Error('Unsupported'));
       } else {
-        resolve(null)
+        resolve(null);
       }
     }).then(function () {
-      return randomNetwork(dc)
+      return randomNetwork(dc);
     }).then(function (net) {
-      return randomStation(dc, net.networkCode)
+      return randomStation(dc, net.networkCode);
     }).then(function (sta) {
       return {
         text: 'Found ' + sta.codes(),
         url: sta.url,
         output: sta
-      }
-    })
+      };
+    });
   }
-}
+};

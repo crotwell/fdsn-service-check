@@ -1,6 +1,6 @@
 
-import { fdsnevent } from 'seisplotjs'
-import { DS, EV, ST, createQuery, doesSupport } from './util'
+import { fdsnevent } from 'seisplotjs';
+import { DS, EV, ST, createQuery, doesSupport } from './util';
 
 export const testEventVersion = {
   testname: 'Event Version',
@@ -9,17 +9,17 @@ export const testEventVersion = {
   webservices: [EV],
   severity: 'severe',
   test: function (dc) {
-    const quakeQuery = createQuery(dc, EV)
-    const url = quakeQuery.formVersionURL()
+    const quakeQuery = createQuery(dc, EV);
+    const url = quakeQuery.formVersionURL();
     return quakeQuery.queryVersion().then(function (version) {
       return {
         text: version,
         output: version,
         url: url
-      }
+      };
     }).catch(function (err) {
-      if (!err.url) { err.url = url }
-      throw err
-    })
+      if (!err.url) { err.url = url; }
+      throw err;
+    });
   }
-}
+};

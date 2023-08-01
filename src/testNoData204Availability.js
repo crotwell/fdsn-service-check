@@ -1,6 +1,6 @@
 
-import { fdsnavailability, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs'
-import { AV, DS, EV, ST, createQuery, doesSupport } from './util'
+import { fdsnavailability, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { AV, DS, EV, ST, createQuery, doesSupport } from './util';
 
 export const testNoData204Availability = {
   testname: 'Availability 204',
@@ -11,52 +11,52 @@ export const testNoData204Availability = {
   test: function (dc) {
     return new RSVP.Promise(function (resolve, reject) {
       if (!doesSupport(dc, AV)) {
-        reject(new Error(AV + ' Unsupported by ' + dc.id))
+        reject(new Error(AV + ' Unsupported by ' + dc.id));
       } else {
-        resolve(null)
+        resolve(null);
       }
     }).then(function () {
-      const query = createQuery(dc, AV)
+      const query = createQuery(dc, AV);
       const url = query
         .networkCode('XX')
         .stationCode('ABC')
         .locationCode('99')
         .channelCode('XXX')
         .computeStartEnd(new Date(Date.UTC(1980, 1, 1, 0, 0, 0)), null, 300, 0)
-        .formURL()
+        .formURL();
       return new Promise(function (resolve, reject) {
-        const client = new XMLHttpRequest()
-        client.open('GET', url)
-        client.onreadystatechange = handler
-        client.responseType = 'arraybuffer'
-        client.setRequestHeader('Accept', 'application/xml')
-        client.send()
+        const client = new XMLHttpRequest();
+        client.open('GET', url);
+        client.onreadystatechange = handler;
+        client.responseType = 'arraybuffer';
+        client.setRequestHeader('Accept', 'application/xml');
+        client.send();
 
         function handler () {
           if (this.readyState === this.DONE) {
             if (this.status === 200) {
-              reject(new Error('Should be no data, but received 200 http status code.'))
+              reject(new Error('Should be no data, but received 200 http status code.'));
             } else if (this.status === 404) {
-              reject(new Error('Should be 204 no data, but received 404 http status code.'))
+              reject(new Error('Should be 204 no data, but received 404 http status code.'));
             } else if (this.status === 204) {
               // 204 is nodata, so successful but empty
               resolve({
                 text: '204 ',
                 url: url,
                 output: 204
-              })
+              });
             } else {
-              const error = new Error('Unexpected http status code: ' + this.status)
-              error.status = this.status
-              error.statusText = this.statusText
-              reject(error)
+              const error = new Error('Unexpected http status code: ' + this.status);
+              error.status = this.status;
+              error.statusText = this.statusText;
+              reject(error);
             }
           }
         }
       }).catch(function (err) {
-        if (!err.url) { err.url = url }
-        throw err
-      })
-    })
+        if (!err.url) { err.url = url; }
+        throw err;
+      });
+    });
   }
-}
+};

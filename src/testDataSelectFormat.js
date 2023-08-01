@@ -1,6 +1,6 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, util, RSVP } from 'seisplotjs'
-import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util'
+import { fdsnevent, fdsnstation, fdsndataselect, util, RSVP } from 'seisplotjs';
+import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
 export const testDataSelectFormat = {
   testname: 'Format as miniseed',
@@ -11,33 +11,33 @@ export const testDataSelectFormat = {
   test: function (dc) {
     return new RSVP.Promise(function (resolve, reject) {
       if (!doesSupport(dc, DS) || !doesSupport(dc, ST)) {
-        reject(new Error('Unsupported'))
+        reject(new Error('Unsupported'));
       } else {
-        resolve(null)
+        resolve(null);
       }
     }).then(function () {
-      return randomNetwork(dc, new Date())
+      return randomNetwork(dc, new Date());
     }).then(function (net) {
-      return randomStation(dc, net.networkCode, new Date())
+      return randomStation(dc, net.networkCode, new Date());
     }).then(function (station) {
-      const query = createQuery(dc, DS)
+      const query = createQuery(dc, DS);
       const url = query
         .networkCode(station.network.networkCode)
         .stationCode(station.stationCode)
         .channelCode('SHZ,BHZ')
         .timeWindow(new util.StartEndDuration(null, null, 300))
         .format('miniseed')
-        .formURL()
+        .formURL();
       return query.queryDataRecords().then(function (miniseed) {
         return {
           text: 'Found ' + miniseed.length,
           url: url,
           output: miniseed
-        }
+        };
       }).catch(function (err) {
-        if (!err.url) { err.url = url }
-        throw err
-      })
-    })
+        if (!err.url) { err.url = url; }
+        throw err;
+      });
+    });
   }
-}
+};

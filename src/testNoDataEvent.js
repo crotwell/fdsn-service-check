@@ -1,6 +1,6 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs'
-import { DS, EV, ST, createQuery, doesSupport } from './util'
+import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { DS, EV, ST, createQuery, doesSupport } from './util';
 
 export const testNoDataEvent = {
   testname: 'NoData Event',
@@ -11,31 +11,31 @@ export const testNoDataEvent = {
   test: function (dc) {
     return new RSVP.Promise(function (resolve, reject) {
       if (!doesSupport(dc, EV)) {
-        reject(new Error(EV + ' Unsupported by ' + dc.id))
+        reject(new Error(EV + ' Unsupported by ' + dc.id));
       } else {
-        resolve(null)
+        resolve(null);
       }
     }).then(function () {
-      const daysAgo = 1
+      const daysAgo = 1;
       const quakeQuery = createQuery(dc, EV)
         .startTime(new Date(new Date().getTime() - 86400 * daysAgo * 1000))
         .endTime(new Date())
-        .minMag(99)
-      const url = quakeQuery.formURL()
+        .minMag(99);
+      const url = quakeQuery.formURL();
       return quakeQuery.query().then(function (quakes) {
         if (quakes.length > 0) {
-          throw new Error('Should be no data, but ' + quakes.length + ' events.')
+          throw new Error('Should be no data, but ' + quakes.length + ' events.');
         } else {
           return {
             text: 'Found ' + quakes.length,
             url: url,
             output: quakes
-          }
+          };
         }
       }).catch(function (err) {
-        if (!err.url) { err.url = url }
-        throw err
-      })
-    })
+        if (!err.url) { err.url = url; }
+        throw err;
+      });
+    });
   }
-}
+};

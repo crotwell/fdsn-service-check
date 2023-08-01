@@ -1,6 +1,6 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs'
-import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util'
+import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
 export const testChannels = {
   testname: 'Channels',
@@ -11,29 +11,29 @@ export const testChannels = {
   test: function (dc) {
     return new RSVP.Promise(function (resolve, reject) {
       if (!doesSupport(dc, ST)) {
-        reject(new Error('Unsupported'))
+        reject(new Error('Unsupported'));
       } else {
-        resolve(null)
+        resolve(null);
       }
     }).then(function () {
-      return randomNetwork(dc)
+      return randomNetwork(dc);
     }).then(function (net) {
-      return randomStation(dc, net.networkCode)
+      return randomStation(dc, net.networkCode);
     }).then(function (sta) {
       const chanQuery = createQuery(dc, ST)
         .networkCode(sta.network.networkCode)
-        .stationCode(sta.stationCode)
+        .stationCode(sta.stationCode);
       return chanQuery.queryChannels()
         .then(function (channels) {
-          channels.url = chanQuery.formURL(fdsnstation.LEVEL_CHANNEL)
-          return channels
-        })
+          channels.url = chanQuery.formURL(fdsnstation.LEVEL_CHANNEL);
+          return channels;
+        });
     }).then(function (channels) {
       return {
         text: 'Found ' + channels.length,
         url: channels.url,
         output: channels
-      }
-    })
+      };
+    });
   }
-}
+};
