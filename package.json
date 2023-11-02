@@ -1,6 +1,6 @@
 {
   "name": "fdsn-service-check",
-  "version": "2.0.0-alpha.2",
+  "version": "3.0.0-alpha.1",
   "description": "Javascript library for testing FDSN web services.",
   "main": "lib/index.js",
   "dependencies": {
@@ -42,7 +42,8 @@
     "@babel/preset-env": "^7.16.11",
     "babelify": "^10.0.0",
     "browserify": "^17.0.0",
-    "standard": "^16.0.4"
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-standard": "^5.0.0"
   },
   "babel": {
     "presets": [
