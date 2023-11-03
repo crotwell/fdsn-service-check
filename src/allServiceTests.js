@@ -41,7 +41,6 @@ const fdsnavailability = seisplotjs.fdsnavailability;
 const fdsnevent = seisplotjs.fdsnevent;
 const fdsnstation = seisplotjs.fdsnstation;
 const fdsndataselect = seisplotjs.fdsndataselect;
-const RSVP = seisplotjs.RSVP;
 
 // all tests should be object with testid, testname and test: function(datacenter, d3selector)
 
@@ -57,16 +56,16 @@ const tests = {
 tests.all = tests.fdsnAvailabilityTests.concat(tests.fdsnEventTests).concat(tests.fdsnStationTests).concat(tests.fdsnDataTests);
 
 const notVersionTest = {
-  fdsnAvailabilityTests: tests.fdsnAvailabilityTests.filter(function (d) {
+  fdsnAvailabilityTests: tests.fdsnAvailabilityTests.filter(function(d) {
     return d.testid.indexOf('version') === -1;
   }),
-  fdsnEventTests: tests.fdsnEventTests.filter(function (d) {
+  fdsnEventTests: tests.fdsnEventTests.filter(function(d) {
     return d.testid.indexOf('version') === -1;
   }),
-  fdsnStationTests: tests.fdsnStationTests.filter(function (d) {
+  fdsnStationTests: tests.fdsnStationTests.filter(function(d) {
     return d.testid.indexOf('version') === -1;
   }),
-  fdsnDataTests: tests.fdsnDataTests.filter(function (d) {
+  fdsnDataTests: tests.fdsnDataTests.filter(function(d) {
     return d.testid.indexOf('version') === -1;
   })
 };
