@@ -6,20 +6,20 @@ const fdsnstation = seisplotjs.fdsnstation;
 const fdsndataselect = seisplotjs.fdsndataselect;
 const RSVP = seisplotjs.RSVP;
 
-export function githubTestURL (testid) {
+export function githubTestURL(testid) {
   return 'https://github.com/crotwell/fdsn-service-check/blob/master/src/test' + testid + '.js';
 }
 
-export function findSupport (dc, type) {
-  return dc.supports.find(function (s) { return s.type === type; });
+export function findSupport(dc, type) {
+  return dc.supports.find(function(s) { return s.type === type; });
 }
 
-export function doesSupport (dc, type) {
-  const out = dc.supports.find(function (s) { return s.type === type; });
+export function doesSupport(dc, type) {
+  const out = dc.supports.find(function(s) { return s.type === type; });
   return typeof out !== 'undefined';
 }
 
-export function serviceHost (dc, type) {
+export function serviceHost(dc, type) {
   const does = findSupport(dc, type);
   if (does) {
     return does.host ? does.host : dc.host;
@@ -27,7 +27,7 @@ export function serviceHost (dc, type) {
   return null;
 }
 
-export function servicePort (dc, type) {
+export function servicePort(dc, type) {
   const does = findSupport(dc, type);
   if (does) {
     return does.port ? does.port : 80;
@@ -35,10 +35,10 @@ export function servicePort (dc, type) {
   return null;
 }
 
-export function createQuery (dc, type) {
+export function createQuery(dc, type) {
   let q = null;
   if (type === AV) {
-    q = new fdsnacailability.AvailabilityQuery();
+    q = new fdsnavailability.AvailabilityQuery();
   } else if (type === DS) {
     q = new fdsndataselect.DataSelectQuery();
   } else if (type === EV) {
@@ -58,13 +58,13 @@ export const DS = 'fdsnws-dataselect';
 export const EV = 'fdsn-event';
 export const ST = 'fdsn-station';
 
-export function randomNetwork (dc, startTime) {
+export function randomNetwork(dc, startTime) {
   const query = createQuery(dc, ST);
   if (startTime) {
     query.startTime(startTime);
   }
   const url = query.formURL(fdsnstation.LEVEL_NETWORK);
-  return query.queryNetworks().then(function (networks) {
+  return query.queryNetworks().then(function(networks) {
     if (networks.length == 0) {
       const err = new Error('No networks');
       err.url = url;
@@ -72,19 +72,19 @@ export function randomNetwork (dc, startTime) {
     }
     // got some nets
     const permNetRE = /[A-W][A-Z0-9]/;
-    const unrestricted = networks.filter(function (net) {
+    const unrestricted = networks.filter(function(net) {
       return ((!net.restrictedStatus || net.restrictedStatus == 'open') &&
-             permNetRE.test(net.networkCode));
+        permNetRE.test(net.networkCode));
     });
     if (unrestricted.length == 0) {
       const errRestricted = new Error('No unrestricted networks');
       errRestricted.url = url;
       throw errRestricted;
     }
-    const withStations = unrestricted.filter(function (net) {
+    const withStations = unrestricted.filter(function(net) {
       return (typeof net.totalNumberStations === 'undefined' ||
-                !net.totalNumberStations ||
-                net.totalNumberStations > 1);
+        !net.totalNumberStations ||
+        net.totalNumberStations > 1);
     });
     if (withStations.length == 0) {
       const errNoSta = new Error('No networks with stations');
@@ -95,20 +95,20 @@ export function randomNetwork (dc, startTime) {
     const net = withStations[i];
     net.url = url;
     return net;
-  }).catch(function (err) {
+  }).catch(function(err) {
     if (!err.url) { err.url = url; }
     throw err;
   });
 }
 
-export function randomStation (dc, netCode, startTime) {
+export function randomStation(dc, netCode, startTime) {
   const query = createQuery(dc, ST)
     .networkCode(netCode);
   if (startTime) {
     query.startTime(startTime);
   }
   const url = query.formURL(fdsnstation.LEVEL_STATION);
-  return query.queryStations().then(function (networks) {
+  return query.queryStations().then(function(networks) {
     if (networks.length == 0) {
       const err = new Error('No networks');
       err.url = url;
@@ -120,7 +120,7 @@ export function randomStation (dc, netCode, startTime) {
       throw errNoSta;
     }
     // got some stations in first net
-    const unrestricted = networks[0].stations.filter(function (net) {
+    const unrestricted = networks[0].stations.filter(function(net) {
       return (!net.restrictedStatus || net.restrictedStatus == 'open');
     });
     if (unrestricted.length == 0) {
@@ -132,12 +132,12 @@ export function randomStation (dc, netCode, startTime) {
     const sta = unrestricted[i];
     sta.url = url;
     return sta;
-  }).catch(function (err) {
+  }).catch(function(err) {
     if (!err.url) { err.url = url; }
     throw err;
   });
 }
 
-export function dateStrEndsZ (s) {
+export function dateStrEndsZ(s) {
   return s.charAt(s.length - 1) === 'Z';
 }
