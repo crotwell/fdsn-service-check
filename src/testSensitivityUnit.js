@@ -29,10 +29,10 @@ export const testSensitivityUnit = {
       let knownUnits = fetch('knownUnits.json').then(function (response) {
         return response.json();
       });
-      let url = hash.query.formURL(fdsnstation.LEVEL_CHANNEL);
+      let url = query.formURL(fdsnstation.LEVEL_CHANNEL);
       return Promise.all([query, nets, knownUnits, url]);
     }).then( ([query, nets, knownUnitsJson, url]) => {
-      console.log('hash knownUnits: ' + knownUnitsJson);
+      console.log('knownUnits: ' + knownUnitsJson);
       const knownUnits = knownUnitsJson.units;
       console.log('Units: ' + knownUnits);
       for (const n of nets) {
@@ -80,7 +80,7 @@ export const testSensitivityUnit = {
       }
       return {
         text: 'Units ok for channels from ' + nets[0].stations[0].codes(),
-        url: hash.url,
+        url: url,
         output: nets[0].stations[0].channels
       };
     });

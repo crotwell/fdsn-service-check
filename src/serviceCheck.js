@@ -280,9 +280,10 @@ function makeTable (fdsn) {
     });
   tr.append('td')
     .append('button')
+    .attr("dcid", function(d) {return d.id;})
     .text('Run')
     .on('click', function (d) {
-      runAllTests(fdsn, d.id, STOP_AT_FIRST_FAIL);
+      runAllTests(fdsn, d.target.getAttribute("dcid"), STOP_AT_FIRST_FAIL);
     });
 }
 
@@ -438,6 +439,9 @@ function runAllTests (fdsn, dcid, stopAtFirstFail) {
   const dc = fdsn.datacenters.find(function (dc) {
     return dc.id === dcid;
   });
+  if ( ! dc) {
+    console.log(`dc not found for ${dcid}`);
+  }
   makeResultsTable(dc, allFdsnTests);
   const dcTests = fdsn.datacenters
     .filter(function (dc) {

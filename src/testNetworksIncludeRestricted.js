@@ -1,5 +1,5 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect } from 'seisplotjs';
+import { fdsnevent, fdsnstation, fdsndataselect, luxon } from 'seisplotjs';
 import { DS, EV, ST, createQuery, doesSupport } from './util';
 
 export const testNetworksIncludeRestricted = {
@@ -17,6 +17,8 @@ export const testNetworksIncludeRestricted = {
       }
     }).then(function () {
       const query = createQuery(dc, ST);
+      // set something
+      query.startBefore(luxon.DateTime.utc());
       query.includeRestricted(false);
       const url = query.formURL(fdsnstation.LEVEL_NETWORK);
       return query.queryNetworks().then(function (networks) {

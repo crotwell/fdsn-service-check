@@ -22,7 +22,7 @@ export const testDataSelectNoData = {
         .stationCode('ABC')
         .locationCode('99')
         .channelCode('XXX')
-        .timeWindow(new util.StartEndDuration('1980-01-01T00:00:00', null, 300))
+        .timeRange(new util.startDuration('1980-01-01T00:00:00', 300))
         .formURL();
       return query.queryDataRecords().then(function (miniseed) {
         if (miniseed.length > 0) {

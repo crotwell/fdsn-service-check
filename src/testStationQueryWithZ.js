@@ -19,9 +19,9 @@ export const testStationQueryWithZ = {
       return randomNetwork(dc);
     }).then(function (net) {
       const start = net.startDate;
-      start.milliseconds(789);
-      const end = net.endDate ? net.endDate : luxon.datetime.utc();
-      end.milliseconds(789);
+      start.set({millisecond: 789});
+      const end = net.endDate ? net.endDate : luxon.DateTime.utc();
+      end.set({millisecond: 789});
       const query = createQuery(dc, ST)
         .networkCode(net.networkCode)
         .startTime(start)

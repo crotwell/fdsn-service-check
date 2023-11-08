@@ -9,7 +9,7 @@ export const testStationNowEndTime = {
   webservices: [ST],
   severity: 'severe',
   test: function(dc) {
-    const now = luxon.datetime.utc();
+    const now = luxon.DateTime.utc();
     let url = null;
     return new Promise(function(resolve, reject) {
       if (!doesSupport(dc, ST)) {
@@ -37,30 +37,24 @@ export const testStationNowEndTime = {
       const nets = stationQuery.queryChannels();
       return Promise.all([url, stationQuery, nets]);
     }).then(([url, stationQuery, nets]) => {
-      return {
-        url: url,
-        query: stationQuery,
-        nets: nets
-      };
-    }).then(function(hash) {
-      if (!hash.nets ||
-        hash.nets.length === 0 ||
-        hash.nets[0].stations.length === 0 ||
-        !hash.nets[0].stations[0]) {
-        const err = new Error(`no station returned for channel query with endTime=${now.toISO()} for ${hash.url}`);
-        err.url = hash.url;
+      if (!nets ||
+        nets.length === 0 ||
+        nets[0].stations.length === 0 ||
+        !nets[0].stations[0]) {
+        const err = new Error(`no station returned for channel query with endTime=${now.toISO()} for ${url}`);
+        err.url = url;
         throw err;
       }
-      hash.station = hash.nets[0].stations[0];
-      if (hash.station.channels.length > 0) {
+      const station = nets[0].stations[0];
+      if (station.channels.length > 0) {
         return {
-          text: 'Found ' + hash.station.channels.length,
-          url: hash.url,
-          output: hash
+          text: 'Found ' + station.channels.length,
+          url: url,
+          output: station
         };
       } else {
-        const err = new Error(`station ${hash.station.codes()} has no channels for endTime=${now}`);
-        err.url = hash.url;
+        const err = new Error(`station ${station.codes()} has no channels for endTime=${now}`);
+        err.url = url;
         throw err;
       }
     }).catch(function(err) {

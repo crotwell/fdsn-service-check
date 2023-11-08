@@ -1,5 +1,5 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, util } from 'seisplotjs';
+import { fdsnevent, fdsnstation, fdsndataselect, util, luxon } from 'seisplotjs';
 import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
 export const testDataSelectFormat = {
@@ -25,7 +25,7 @@ export const testDataSelectFormat = {
         .networkCode(station.network.networkCode)
         .stationCode(station.stationCode)
         .channelCode('SHZ,BHZ')
-        .timeWindow(new util.StartEndDuration(null, null, 300))
+        .timeRange(new util.durationEnd(300, luxon.DateTime.utc()))
         .format('miniseed')
         .formURL();
       return query.queryDataRecords().then(function (miniseed) {

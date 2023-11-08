@@ -30,7 +30,7 @@ export const testDateIncludeZ = {
         let failureEvent = null;
         let otimeStr = null;
         if (eventArray.every(function (q, i) {
-          otimeStr = quakeml.parseUtil._grabFirstElText(quakeml.parseUtil._grabFirstEl(quakeml.parseUtil._grabFirstEl(qml, 'origin'), 'time'), 'value');
+          otimeStr = quakeml.parseUtil._grabFirstElText(quakeml.parseUtil._grabFirstEl(quakeml.parseUtil._grabFirstEl(q, 'origin'), 'time'), 'value');
           if (otimeStr) {
             if (otimeStr.charAt(otimeStr.length - 1) === 'Z') {
               return true;
@@ -39,7 +39,7 @@ export const testDateIncludeZ = {
               return false;
             }
           } else {
-            const err = new Error('origintime is missing for ' + i + 'th event: ' + q.getAttribute('publicID'));
+            const err = new Error('origin.time is missing for ' + i + 'th event: ' + q.getAttribute('publicID'));
             err.url = url;
             throw err;
           }

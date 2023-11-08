@@ -1,9 +1,6 @@
-import * as seisplotjs from 'seisplotjs';
-
-const fdsnavailability = seisplotjs.fdsnavailability;
-const fdsnevent = seisplotjs.fdsnevent;
-const fdsnstation = seisplotjs.fdsnstation;
-const fdsndataselect = seisplotjs.fdsndataselect;
+import {
+  fdsnavailability, fdsnevent, fdsnstation, fdsndataselect, luxon
+} from 'seisplotjs';
 
 export function githubTestURL(testid) {
   return 'https://github.com/crotwell/fdsn-service-check/blob/master/src/test' + testid + '.js';
@@ -62,6 +59,8 @@ export function randomNetwork(dc, startTime) {
   if (startTime) {
     query.startTime(startTime);
   }
+  // make sure some param is set, look for active networks
+  query.startBefore(luxon.DateTime.utc());
   const url = query.formURL(fdsnstation.LEVEL_NETWORK);
   return query.queryNetworks().then(function(networks) {
     if (networks.length == 0) {
