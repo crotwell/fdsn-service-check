@@ -1,5 +1,5 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { fdsnevent, fdsnstation, fdsndataselect } from 'seisplotjs';
 import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation, dateStrEndsZ } from './util';
 
 export const testStationDateIncludeZ = {
@@ -9,7 +9,7 @@ export const testStationDateIncludeZ = {
   webservices: [ST],
   severity: 'opinion',
   test: function (dc) {
-    return new RSVP.Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
       if (!doesSupport(dc, ST)) {
         reject(new Error('Unsupported'));
       } else {

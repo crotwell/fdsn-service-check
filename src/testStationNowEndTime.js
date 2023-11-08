@@ -1,5 +1,5 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, RSVP, moment } from 'seisplotjs';
+import { fdsnevent, fdsnstation, fdsndataselect } from 'seisplotjs';
 import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
 export const testStationNowEndTime = {
@@ -8,21 +8,21 @@ export const testStationNowEndTime = {
   description: 'Queries for channels for a random station with both endtime = now',
   webservices: [ST],
   severity: 'severe',
-  test: function (dc) {
+  test: function(dc) {
     const now = moment.utc();
     let url = null;
-    return new RSVP.Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       if (!doesSupport(dc, ST)) {
         reject(new Error('Unsupported'));
       } else {
         resolve(null);
       }
-    }).then(function () {
+    }).then(function() {
       return randomNetwork(dc, now);
-    }).then(function (net) {
+    }).then(function(net) {
       if (!net) { throw new Error('Did not find a network'); }
       return randomStation(dc, net.networkCode, now);
-    }).then(function (randomStation, now) {
+    }).then(function(randomStation, now) {
       if (!randomStation) { throw new Error(`Did not find a station within ${net.networkCode}`); }
       const stationQuery = createQuery(dc, ST);
 
@@ -33,16 +33,19 @@ export const testStationNowEndTime = {
         .stationCode(randomStation.stationCode)
         .endTime(now);
       url = stationQuery.formURL(fdsnstation.LEVEL_STATION);
-      return RSVP.hash({
+      const nets = stationQuery.queryChannels();
+      return Promise.all([url, stationQuery, nets]);
+    }).then(function(url, stationQuery, nets) {
+      return {
         url: url,
         query: stationQuery,
-        nets: stationQuery.queryChannels()
-      });
-    }).then(function (hash) {
+        nets: nets
+      };
+    }).then(function(hash) {
       if (!hash.nets ||
-      hash.nets.length === 0 ||
-      hash.nets[0].stations.length === 0 ||
-      !hash.nets[0].stations[0]) {
+        hash.nets.length === 0 ||
+        hash.nets[0].stations.length === 0 ||
+        !hash.nets[0].stations[0]) {
         const err = new Error(`no station returned for channel query with endTime=${now}`);
         err.url = hash.url;
         throw err;
@@ -59,7 +62,7 @@ export const testStationNowEndTime = {
         err.url = hash.url;
         throw err;
       }
-    }).catch(function (err) {
+    }).catch(function(err) {
       if (!err.url) { err.url = url; }
       throw err;
     });

@@ -1,5 +1,5 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { fdsnevent, fdsnstation, fdsndataselect } from 'seisplotjs';
 import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
 export const testSensitivityUnit = {
@@ -9,7 +9,7 @@ export const testSensitivityUnit = {
   webservices: [ST],
   severity: 'opinion',
   test: function (dc) {
-    return new RSVP.Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
       if (!doesSupport(dc, ST)) {
         reject(new Error('Unsupported'));
       } else {
@@ -23,20 +23,17 @@ export const testSensitivityUnit = {
       const query = createQuery(dc, ST)
         .networkCode(station.network.networkCode)
         .stationCode(station.stationCode);
-      return RSVP.hash({
-        query: query,
-        nets: query.queryChannels()
-      });
-    }).then(function (hash) {
-      hash.knownUnits = fetch('knownUnits.json').then(function (response) {
+      const nets = query.queryChannels();
+      return Promise.all([ query, nets]);
+    }).then(([ query, nets]) => {
+      let knownUnits = fetch('knownUnits.json').then(function (response) {
         return response.json();
       });
-      hash.url = hash.query.formURL(fdsnstation.LEVEL_CHANNEL);
-      return RSVP.hash(hash);
-    }).then(function (hash) {
-      console.log('hash knownUnits: ' + hash.knownUnits);
-      const knownUnits = hash.knownUnits.units;
-      const nets = hash.nets;
+      let url = hash.query.formURL(fdsnstation.LEVEL_CHANNEL);
+      return Promise.all([query, nets, knownUnits, url]);
+    }).then( ([query, nets, knownUnitsJson, url]) => {
+      console.log('hash knownUnits: ' + knownUnitsJson);
+      const knownUnits = knownUnitsJson.units;
       console.log('Units: ' + knownUnits);
       for (const n of nets) {
         for (const s of n.stations) {

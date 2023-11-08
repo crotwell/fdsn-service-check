@@ -1,5 +1,5 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, util, RSVP } from 'seisplotjs';
+import { fdsnevent, fdsnstation, fdsndataselect, util } from 'seisplotjs';
 import { DS, EV, ST, createQuery, doesSupport } from './util';
 
 export const testNoData204DataSelect = {
@@ -9,7 +9,7 @@ export const testNoData204DataSelect = {
   webservices: [DS],
   severity: 'severe',
   test: function (dc) {
-    return new RSVP.Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
       if (!doesSupport(dc, DS)) {
         reject(new Error(DS + ' Unsupported by ' + dc.id));
       } else {

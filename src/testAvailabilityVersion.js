@@ -1,5 +1,5 @@
 
-import { fdsnavailability, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { fdsnavailability, fdsnstation, fdsndataselect } from 'seisplotjs';
 import { AV, DS, EV, ST, createQuery, doesSupport } from './util';
 
 export const testAvailabilityVersion = {

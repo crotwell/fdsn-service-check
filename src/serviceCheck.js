@@ -1,15 +1,13 @@
 
 import { allFdsnTests } from './allServiceTests';
 import * as seisplotjs from 'seisplotjs';
+import * as d3 from 'd3-selection';
 import { AV, DS, EV, ST, serviceHost, createQuery, doesSupport, githubTestURL } from './util';
 
-// seisplotjs comes from the seisplotjs standalone bundle
-const d3 = seisplotjs.d3;
 const fdsnavailability = seisplotjs.fdsnavailability;
 const fdsnevent = seisplotjs.fdsnevent;
 const fdsnstation = seisplotjs.fdsnstation;
 const fdsndataselect = seisplotjs.fdsndataselect;
-const RSVP = seisplotjs.RSVP;
 const UNSUPPORTED = 'Unsupported';
 const dataCentersURL = './fdsnDataCenters.json';
 
@@ -47,7 +45,7 @@ fetch(dataCentersURL)
 // }
 
 function selectionForTestDC (test, dc) {
-  let sel = d3.select('tr.' + test.testid + '.' + dc.id).select('td.testresult');
+  let sel = d3.select(`tr.${test.testid}.${dc.id}`).select('td.testresult');
   if (sel && !sel.empty()) {
     return sel;
   } else {
@@ -61,7 +59,7 @@ async function runTestOnDC (test, dc, DCType) {
   const sel = selectionForTestDC(test, dc);
   console.log('RunTestOnDC: ' + test.testname + ' ' + dc.id + ' ' + DCType + '  sup=' + doesSupport(dc, DCType));
   if (!doesSupport(dc, DCType)) {
-    return new RSVP.Promise(function (resolve) {
+    return new Promise(function (resolve) {
       resolve({
         text: UNSUPPORTED,
         url: 'none'
@@ -75,7 +73,7 @@ async function runTestOnDC (test, dc, DCType) {
     });
   }
   // dc type is supported
-  return new RSVP.Promise(function (resolve) {
+  return new Promise(function (resolve) {
     resolve({
       text: '',
       url: 'none'
@@ -446,13 +444,13 @@ function runAllTests (fdsn, dcid, stopAtFirstFail) {
       return dc.id === dcid;
     }).map(function (dc) {
       const combinedTests = { dc: dc };
-      const initEVTest = new RSVP.Promise(function (resolve) {
+      const initEVTest = new Promise(function (resolve) {
         resolve(true);
       });
-      const initSTTest = new RSVP.Promise(function (resolve) {
+      const initSTTest = new Promise(function (resolve) {
         resolve(true);
       });
-      const initDSTest = new RSVP.Promise(function (resolve) {
+      const initDSTest = new Promise(function (resolve) {
         resolve(true);
       });
 
@@ -498,7 +496,7 @@ function runAllTests (fdsn, dcid, stopAtFirstFail) {
       return combinedTests;
     });
 
-  RSVP.all(dcTests.map(function (dcT) { return RSVP.hash(dcT); }))
+  Promise.all(dcTests.map(function (dcT) { return Promise.resolve(dcT); }))
     .then(function () { console.log('tests finished'); })
     .catch(function (r) {
       console.assert(false, r);
@@ -520,7 +518,7 @@ function runOneTest (testid, fdsn) {
     // wrong if test in on multiple server types
     return runTestOnDC(test, dc, test.webservices[0]);
   });
-  return RSVP.allSettled(dcTests)
+  return Promise.allSettled(dcTests)
     .then(function (settled) {
       console.log('runOneTest settled: ' + settled.length + ' ' + settled[0]);
     });

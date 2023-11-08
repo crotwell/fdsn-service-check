@@ -4,7 +4,6 @@ const fdsnavailability = seisplotjs.fdsnavailability;
 const fdsnevent = seisplotjs.fdsnevent;
 const fdsnstation = seisplotjs.fdsnstation;
 const fdsndataselect = seisplotjs.fdsndataselect;
-const RSVP = seisplotjs.RSVP;
 
 export function githubTestURL(testid) {
   return 'https://github.com/crotwell/fdsn-service-check/blob/master/src/test' + testid + '.js';

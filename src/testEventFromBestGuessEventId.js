@@ -1,5 +1,5 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { fdsnevent, fdsnstation, fdsndataselect } from 'seisplotjs';
 import { DS, EV, ST, createQuery, doesSupport } from './util';
 
 export const testEventFromBestGuessEventId = {
@@ -11,7 +11,7 @@ export const testEventFromBestGuessEventId = {
   test: function (dc) {
     let url = 'none';
     const daysAgo = 0.5;
-    return new RSVP.Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
       if (!doesSupport(dc, EV)) {
         reject(new Error('Unsupported'));
       } else {

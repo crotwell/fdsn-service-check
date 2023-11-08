@@ -1,5 +1,5 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect, RSVP } from 'seisplotjs';
+import { fdsnevent, fdsnstation, fdsndataselect } from 'seisplotjs';
 import { DS, EV, ST, createQuery, doesSupport } from './util';
 
 export const testEventCrossDateLine = {
@@ -9,7 +9,7 @@ export const testEventCrossDateLine = {
   webservices: [EV],
   severity: 'opinion',
   test: function (dc) {
-    return new RSVP.Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
       if (!doesSupport(dc, EV)) {
         reject(new Error('Unsupported'));
       } else {
