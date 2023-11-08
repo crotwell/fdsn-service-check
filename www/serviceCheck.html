@@ -12,15 +12,51 @@
 
 <p>FDSN web service <a href="http://www.fdsn.org/webservices">specification</a>.</p>
 
-<p>This runs tests against FDSN web serices from within the browser. The means that we are making XMLHttpRequest from javascript that is loaded from our web server to the web server hosting the web service. If that server is not configured to allow queries from pages loaded from other sites, the request will fail. This is true even if the URL is accessible and working when directly entered into the browser. We believe that FDSN web services should in general be available in this manner. See the <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">Wikipedia</a> article and <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">Mozilla</a> and <a href="https://www.w3.org/TR/cors/">W3C</a> for more information.</p>
+<p>This runs tests against FDSN web serices from within the browser.
+  This means that we are making fetch requests in the browser itself
+  via javascript that is loaded
+  from our web server to the web server hosting the web service.
+  If that server is not configured to allow queries from pages loaded from
+  other sites, the request will fail.
+  This is true even if the URL is accessible and working when directly
+  entered into the browser. We believe that FDSN web services should in
+  general be available in this manner. See the
+  <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">Wikipedia</a>
+  article and <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">Mozilla</a>
+  and <a href="https://www.w3.org/TR/cors/">W3C</a> for more information.</p>
 
-<p>In the case of failures, it is often helpful to look at the javascript console as additional debugging information can appear there. In particular, CORS errors are logged to the console, but the javascript does not receive them. Tests stop on the first failure within each type. <span class="success">Green</span> tests are passes, <span class="fail">red</span> tests are failure and <span class="failOpinion">yellow</span> are just my opinion.</p>
+<p>Be aware that IF this page is loaded via HTTPS, then all requests to the
+  FDSN web services will also be via HTTPS as the browser will prevent an
+  HTTPS loaded web page from attempting insecure HTTP queries. But if the
+  web server under test only supports HTTP, then all tests will fail after
+  a somewhat lengthy timeout period. We would like to see all of these
+  web services support both HTTP and HTTPS.
+</p>
 
-<p>Warning, because the data the remote service has access to is not enocoded in these test, there is a reasonable chance of false postives and false negatives. Different browsers can also give different results, so it is worth checking multiple browsers and operating systems. These tests also represent my reading of the FDSN Web Service Specification, and hence reflect my biases. And there is always the chance of bugs in the javascript that runs the tests. Comments are welcome, you can email me (Philip Crotwell) at  crotwell <b>at</b> seis.sc.edu.</p>
+<p>In the case of failures, it is often helpful to look at the javascript
+  console as additional debugging information can appear there. In particular,
+  CORS errors are logged to the console, but the javascript does not
+  receive them. Tests stop on the first failure within each type.
+  <span class="success">Green</span> tests are passes,
+  <span class="fail">red</span> tests are failure and
+  <span class="failOpinion">yellow</span> are just my opinion.</p>
 
-<p>Source code is at <a href="https://github.com/crotwell/fdsn-service-check">GitHub</a> and uses <a href="https://github.com/crotwell/seisplotjs">seisplotjs</a></p>
+<p>Warning, because the data the remote service has access to is not
+  encoded in these test, there is a reasonable chance of false positives and
+  false negatives. Different browsers can also give different results,
+  so it is worth checking multiple browsers and operating systems.
+  These tests also represent my reading of the FDSN Web Service Specification,
+  and hence reflect my biases. And there is always the chance of bugs in the
+  javascript that runs the tests. Comments are welcome, you can email
+  me (Philip Crotwell) at  crotwell <b>at</b> seis.sc.edu.</p>
 
-<p>Click RUN to run tests on a data center, <a href="#results">results will appear below</a>. You can also run a <a href="listTests.html">single test against multiple data centers.</a></p>
+<p>Source code is at
+  <a href="https://github.com/crotwell/fdsn-service-check">GitHub</a>
+  and uses <a href="https://github.com/crotwell/seisplotjs">seisplotjs</a></p>
+
+<p>Click RUN to run tests on a data center,
+  <a href="#results">results will appear below</a>.
+  You can also run a <a href="listTests.html">single test against multiple data centers.</a></p>
 
 <div class="datacenters">
 <h3>Data Centers</h3>

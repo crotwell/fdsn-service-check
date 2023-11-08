@@ -7,28 +7,41 @@ export function githubTestURL(testid) {
 }
 
 export function findSupport(dc, type) {
-  return dc.supports.find(function(s) { return s.type === type; });
+  for (const repo of dc.repositories) {
+    const out = repo.services.find(function(s) { return s.name === type; });
+    if (out) { return out;}
+  }
+  return null;
 }
 
 export function doesSupport(dc, type) {
-  const out = dc.supports.find(function(s) { return s.type === type; });
-  return typeof out !== 'undefined';
+  for (const repo of dc.repositories) {
+    const out = repo.services.find(function(s) { return s.name === type; });
+    if (out) { return true;}
+  }
+  return false;
 }
 
 export function serviceHost(dc, type) {
-  const does = findSupport(dc, type);
-  if (does) {
-    return does.host ? does.host : dc.host;
+  const service = findSupport(dc, type);
+  if (service) {
+    if ("url" in service && typeof service.url === 'string') {
+      const url = new URL(service.url);
+      return url.hostname;
+    }
   }
   return null;
 }
 
 export function servicePort(dc, type) {
-  const does = findSupport(dc, type);
-  if (does) {
-    return does.port ? does.port : 80;
+  const service = findSupport(dc, type);
+  if (service) {
+    if ("url" in service && typeof service.url === 'string') {
+      const url = new URL(service.url);
+      return url.port ? url.port : 80;
+    }
   }
-  return null;
+  return 80;
 }
 
 export function createQuery(dc, type) {
@@ -45,14 +58,17 @@ export function createQuery(dc, type) {
     throw new Error('Unkown type: ' + type);
   }
   q.host(serviceHost(dc, type));
-  q.port(servicePort(dc, type));
+  const p = servicePort(dc, type);
+  if (p && p !== 80) {
+    q.port(p);
+  }
   return q;
 }
 
-export const AV = 'fdsn-availability';
-export const DS = 'fdsnws-dataselect';
-export const EV = 'fdsn-event';
-export const ST = 'fdsn-station';
+export const AV = 'fdsnws-availability-1';
+export const DS = 'fdsnws-dataselect-1';
+export const EV = 'fdsnws-event-1';
+export const ST = 'fdsnws-station-1';
 
 export function randomNetwork(dc, startTime) {
   const query = createQuery(dc, ST);

@@ -1,13 +1,18 @@
 
 import { allFdsnTests } from './allServiceTests';
+
+import {
+  fdsndatacenters,
+  fdsnavailability,
+  fdsnevent,
+  fdsnstation,
+  fdsndataselect,
+  luxon
+} from 'seisplotjs';
 import * as seisplotjs from 'seisplotjs';
 import * as d3 from 'd3-selection';
 import { AV, DS, EV, ST, serviceHost, createQuery, doesSupport, githubTestURL } from './util';
 
-const fdsnavailability = seisplotjs.fdsnavailability;
-const fdsnevent = seisplotjs.fdsnevent;
-const fdsnstation = seisplotjs.fdsnstation;
-const fdsndataselect = seisplotjs.fdsndataselect;
 const UNSUPPORTED = 'Unsupported';
 const dataCentersURL = './fdsnDataCenters.json';
 
@@ -17,12 +22,10 @@ const MIN_TEST_INTERVAL = 1000;
 console.log('allFdsnTests: ' + allFdsnTests);
 
 let fdsnDataCenters = null;
-// note does not work for localhost and/or file loading, must
-// be from web server due to security I think
-fetch(dataCentersURL)
-  .then(function (response) {
-    return response.json();
-  })
+
+
+
+new fdsndatacenters.DataCentersQuery().queryJson()
   .then(function (jsonResponse) {
     fdsnDataCenters = jsonResponse;
     makeTable(fdsnDataCenters);
@@ -45,11 +48,11 @@ fetch(dataCentersURL)
 // }
 
 function selectionForTestDC (test, dc) {
-  let sel = d3.select(`tr.${test.testid}.${dc.id}`).select('td.testresult');
+  let sel = d3.select(`tr.${test.testid}.${dc.name}`).select('td.testresult');
   if (sel && !sel.empty()) {
     return sel;
   } else {
-    sel = d3.select('tr.' + dc.id).select('td.testresult');
+    sel = d3.select('tr.' + dc.name).select('td.testresult');
     return sel;
   }
 }
@@ -57,7 +60,7 @@ function selectionForTestDC (test, dc) {
 async function runTestOnDC (test, dc, DCType) {
   const testRunStart = performance.now();
   const sel = selectionForTestDC(test, dc);
-  console.log('RunTestOnDC: ' + test.testname + ' ' + dc.id + ' ' + DCType + '  sup=' + doesSupport(dc, DCType));
+  console.log('RunTestOnDC: ' + test.testname + ' ' + dc.name + ' ' + DCType + '  sup=' + doesSupport(dc, DCType));
   if (!doesSupport(dc, DCType)) {
     return new Promise(function (resolve) {
       resolve({
@@ -80,7 +83,7 @@ async function runTestOnDC (test, dc, DCType) {
     });
   }).then(function () {
     // run test and package up result
-    console.log('run ' + test.testname + ' on ' + dc.id + ' ' + DCType);
+    console.log('run ' + test.testname + ' on ' + dc.name + ' ' + DCType);
     return test.test(dc);
   }).then(function (result) {
     const out = {
@@ -107,10 +110,10 @@ async function runTestOnDC (test, dc, DCType) {
       .attr('class', 'success')
       .attr('href', testOut.url)
       .text('OK');
-    const messageSel = d3.select('tr.' + test.testid + '.' + dc.id).select('td.testmessage');
+    const messageSel = d3.select('tr.' + test.testid + '.' + dc.name).select('td.testmessage');
     messageSel.selectAll('*').remove();
     messageSel.append('span').text(testOut.text);
-    const runtimeSel = d3.select('tr.' + test.testid + '.' + dc.id).select('td.runtime');
+    const runtimeSel = d3.select('tr.' + test.testid + '.' + dc.name).select('td.runtime');
     runtimeSel.selectAll('*').remove();
     runtimeSel.append('span').text(Math.round(testOut.runtime) / 1000);
     return testOut;
@@ -121,11 +124,11 @@ async function runTestOnDC (test, dc, DCType) {
     return testOut;
   }).catch(function (err) {
     const runtime = (performance.now() - testRunStart);
-    const runtimeSel = d3.select('tr.' + test.testid + '.' + dc.id).select('td.runtime');
+    const runtimeSel = d3.select('tr.' + test.testid + '.' + dc.name).select('td.runtime');
     runtimeSel.selectAll('*').remove();
     runtimeSel.append('span').text(Math.round(runtime) / 1000);
-    const messageSel = d3.select('tr.' + test.testid + '.' + dc.id).select('td.testmessage');
-    console.log("catch in test='" + test.testname + "' on " + dc.id + ' ' + DCType);
+    const messageSel = d3.select('tr.' + test.testid + '.' + dc.name).select('td.testmessage');
+    console.log("catch in test='" + test.testname + "' on " + dc.name + ' ' + DCType);
     console.assert(false, err);
     if (err.url) {
       console.log('   url: ' + err.url);
@@ -137,7 +140,7 @@ async function runTestOnDC (test, dc, DCType) {
     sel.selectAll('*').remove();
     messageSel.selectAll('*').remove();
     if (err === UNSUPPORTED) {
-      console.log('test ' + test.testname + ' on ' + dc.id + ' ' + DCType + ' unsupported.');
+      console.log('test ' + test.testname + ' on ' + dc.name + ' ' + DCType + ' unsupported.');
       sel.append('span').text('unsupported');
     } else {
       console.assert(false, err);
@@ -182,6 +185,12 @@ function makeTable (fdsn) {
     table = d3.select('.datacenters').append('table');
     const thr = table.append('thead').append('tr');
     thr.append('th').text('Name');
+    thr.append('th')
+
+      .append('a')
+      .attr('href', 'https://www.fdsn.org/datacenters/')
+      .attr('target', '_blank')
+      .text('FDSN Registry');
     thr.append('th').text('Availability');
     thr.append('th').text('Event');
     thr.append('th').text('Station');
@@ -194,18 +203,23 @@ function makeTable (fdsn) {
     .data(fdsn.datacenters);
   tableData.exit().remove();
 
-  const tr = tableData.enter().append('tr').attr('class', function (dc) { return dc.id; });
+  const tr = tableData.enter().append('tr').attr('class', function (dc) { return dc.name; });
 
   tr.append('td')
     .append('a').attr('href', function (d) {
       if (d.website) {
         return d.website;
       } else {
-        return 'http://' + d.host;
+        return 'http://' + serviceHost(d);
       }
     }).html(function (d) {
-      return d.name;
-    });
+      return d.fullName;
+    }).attr('target', '_blank');
+  tr.append('td')
+    .append('a').attr('href', function (d) {
+      return `https://www.fdsn.org/datacenters/detail/${d.name}/`
+    }).attr('target', '_blank')
+    .text(function (d) {return d.name;});
   tr.append('td')
     .append(function (d) {
       if (doesSupport(d, AV)) {
@@ -280,7 +294,7 @@ function makeTable (fdsn) {
     });
   tr.append('td')
     .append('button')
-    .attr("dcid", function(d) {return d.id;})
+    .attr("dcid", function(d) {return d.name;})
     .text('Run')
     .on('click', function (d) {
       runAllTests(fdsn, d.target.getAttribute("dcid"), STOP_AT_FIRST_FAIL);
@@ -319,9 +333,10 @@ function makeTestsTable (inTests, fdsn) {
     });
   tr.append('td')
     .append('button')
+    .attr("testid", function(d) {return d.testid;})
     .text('Run')
     .on('click', function (d) {
-      runOneTest(d.testid, fdsn);
+      runOneTest(d.target.getAttribute("testid"), fdsn);
     });
   tr.append('td').append('span').text(function (test) {
     return test.webservices.join(' ');
@@ -348,7 +363,7 @@ function makeResultsTable (dc, inTests) {
   div.selectAll('*').remove();
   const divP = div.append('h3');
   divP.text('Results for ');
-  divP.append('a').attr('href', dc.url).text(dc.name);
+  divP.append('a').attr('href', dc.url).text(dc.fullName);
   let table = div.select('table');
   if (table.empty()) {
     table = d3.select('.results').append('table');
@@ -374,7 +389,7 @@ function makeResultsTable (dc, inTests) {
     .selectAll('tr')
     .data(allTests);
   tableData.exit().remove();
-  const tr = tableData.enter().append('tr').attr('class', function (test) { return test.testid + ' ' + dc.id; });
+  const tr = tableData.enter().append('tr').attr('class', function (test) { return test.testid + ' ' + dc.name; });
   tr.append('td').attr('class', 'testresult');
   tr.append('td')
     .append('a').attr('href', function (test) { return githubTestURL(test.testid); })
@@ -414,7 +429,7 @@ function makeResultsOneTestTable (test, fdsn) {
     .selectAll('tr')
     .data(fdsn.datacenters);
   tableData.exit().remove();
-  const tr = tableData.enter().append('tr').attr('class', function (dc) { return test.testid + ' ' + dc.id; });
+  const tr = tableData.enter().append('tr').attr('class', function (dc) { return test.testid + ' ' + dc.name; });
   tr.append('td').attr('class', 'testresult');
   tr.append('td')
     .append('a').attr('href', function (dc) {
@@ -424,7 +439,7 @@ function makeResultsOneTestTable (test, fdsn) {
         return 'http://' + dc.host;
       }
     }).html(function (dc) {
-      return dc.name;
+      return dc.fullName;
     });
   tr.append('td').append('span').text(function (dc) {
     return serviceHost(dc, test.webservices[0]);
@@ -434,10 +449,13 @@ function makeResultsOneTestTable (test, fdsn) {
 }
 
 function runAllTests (fdsn, dcid, stopAtFirstFail) {
+  if (! dcid ) {
+    throw new Error("dcid not defined: "+dcid);
+  }
   const continueOnFail = !stopAtFirstFail;
   // loop dc and tests...
   const dc = fdsn.datacenters.find(function (dc) {
-    return dc.id === dcid;
+    return dc.name === dcid;
   });
   if ( ! dc) {
     console.log(`dc not found for ${dcid}`);
@@ -445,7 +463,7 @@ function runAllTests (fdsn, dcid, stopAtFirstFail) {
   makeResultsTable(dc, allFdsnTests);
   const dcTests = fdsn.datacenters
     .filter(function (dc) {
-      return dc.id === dcid;
+      return dc.name === dcid;
     }).map(function (dc) {
       const combinedTests = { dc: dc };
       const initEVTest = new Promise(function (resolve) {
@@ -509,15 +527,13 @@ function runAllTests (fdsn, dcid, stopAtFirstFail) {
 }
 
 function runOneTest (testid, fdsn) {
-  console.log('allFdsnTests: ' + allFdsnTests);
-  console.log('fdsn dcs: ' + fdsn.datacenters.length);
   // loop dc and tests...
   const test = allFdsnTests.all.find(function (d) {
     return d.testid === testid;
   });
   makeResultsOneTestTable(test, fdsn);
   const dcTests = fdsn.datacenters.map(function (dc) {
-    const sel = d3.select('tr.' + dc.id).select('td.testresult');
+    const sel = d3.select('tr.' + dc.name).select('td.testresult');
     sel.append('span').text('Run');
     // wrong if test in on multiple server types
     return runTestOnDC(test, dc, test.webservices[0]);
