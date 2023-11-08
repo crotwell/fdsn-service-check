@@ -3,7 +3,7 @@ import {
 } from 'seisplotjs';
 
 export function githubTestURL(testid) {
-  return 'https://github.com/crotwell/fdsn-service-check/blob/master/src/test' + testid + '.js';
+  return 'https://github.com/crotwell/fdsn-service-check/blob/main/src/test' + testid + '.js';
 }
 
 export function findSupport(dc, type) {
