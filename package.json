@@ -4,7 +4,6 @@
   "description": "Javascript library for testing FDSN web services.",
   "main": "lib/index.js",
   "dependencies": {
-    "@babel/runtime": "^7.16.7",
     "d3-selection": "^3.0.0",
     "eslint-plugin-flowtype": "^8.0.3",
     "eslint-plugin-node": "^11.1.0",
@@ -13,11 +12,8 @@
   "scripts": {
     "lint": "eslint 'src/**/*.js' ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "npx babel -d lib/ src/",
-    "standaloneold": "browserify src/*.js --standalone servicecheck -o www/servicecheck_${npm_package_version}_standalone.js -t [ babelify  ]",
-    "esstandalone": "npx esbuild src/serviceCheck.js --bundle --outfile=www/servicecheck_${npm_package_version}_standalone.mjs  --target=es2020 --format=esm",
-    "standalone": "npm run esstandalone && cp dist/seisplotjs_${npm_package_version}_standalone.mjs docs/.",
-    "serve": "npx http-server www",
+    "standalone": "npx esbuild src/serviceCheck.js --bundle --outfile=www/servicecheck_${npm_package_version}_standalone.mjs  --target=es2020 --format=esm",
+    "serve": "npm run standalone && npx http-server www",
     "prepare": "npm run compile"
   },
   "repository": {
@@ -39,12 +35,6 @@
   },
   "homepage": "https://github.com/crotwell/fdsn-service-check",
   "devDependencies": {
-    "@babel/cli": "^7.16.8",
-    "@babel/core": "^7.16.12",
-    "@babel/plugin-transform-runtime": "^7.16.10",
-    "@babel/preset-env": "^7.16.11",
-    "babelify": "^10.0.0",
-    "browserify": "^17.0.0",
     "esbuild": "^0.19.5",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-standard": "^5.0.0"
