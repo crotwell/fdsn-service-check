@@ -1,5 +1,5 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect } from 'seisplotjs';
+import { fdsnevent, fdsnstation, fdsndataselect, luxon } from 'seisplotjs';
 import { DS, EV, ST, createQuery, doesSupport, randomNetwork, randomStation } from './util';
 
 export const testStationNowEndTime = {
@@ -9,7 +9,7 @@ export const testStationNowEndTime = {
   webservices: [ST],
   severity: 'severe',
   test: function(dc) {
-    const now = moment.utc();
+    const now = luxon.datetime.utc();
     let url = null;
     return new Promise(function(resolve, reject) {
       if (!doesSupport(dc, ST)) {
@@ -33,9 +33,10 @@ export const testStationNowEndTime = {
         .stationCode(randomStation.stationCode)
         .endTime(now);
       url = stationQuery.formURL(fdsnstation.LEVEL_STATION);
+      console.log("xxxxx url="+url)
       const nets = stationQuery.queryChannels();
       return Promise.all([url, stationQuery, nets]);
-    }).then(function(url, stationQuery, nets) {
+    }).then(([url, stationQuery, nets]) => {
       return {
         url: url,
         query: stationQuery,
@@ -46,7 +47,7 @@ export const testStationNowEndTime = {
         hash.nets.length === 0 ||
         hash.nets[0].stations.length === 0 ||
         !hash.nets[0].stations[0]) {
-        const err = new Error(`no station returned for channel query with endTime=${now}`);
+        const err = new Error(`no station returned for channel query with endTime=${now.toISO()} for ${hash.url}`);
         err.url = hash.url;
         throw err;
       }

@@ -1,5 +1,5 @@
 
-import { fdsnevent, fdsnstation, fdsndataselect } from 'seisplotjs';
+import { fdsnevent, fdsnstation, fdsndataselect, luxon } from 'seisplotjs';
 import { DS, EV, ST, createQuery, doesSupport, randomNetwork } from './util';
 
 export const testStationQueryWithZ = {
@@ -20,7 +20,7 @@ export const testStationQueryWithZ = {
     }).then(function (net) {
       const start = net.startDate;
       start.milliseconds(789);
-      const end = net.endDate ? net.endDate : moment.utc();
+      const end = net.endDate ? net.endDate : luxon.datetime.utc();
       end.milliseconds(789);
       const query = createQuery(dc, ST)
         .networkCode(net.networkCode)
