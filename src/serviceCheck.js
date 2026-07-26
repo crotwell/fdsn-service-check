@@ -13,6 +13,8 @@ import * as seisplotjs from 'seisplotjs';
 import * as d3 from 'd3-selection';
 import { AV, DS, EV, ST, serviceHost, createQuery, doesSupport, githubTestURL } from './util';
 
+seisplotjs.util.updateVersionText('.sp_version');
+
 const UNSUPPORTED = 'Unsupported';
 const dataCentersURL = './fdsnDataCenters.json';
 

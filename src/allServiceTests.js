@@ -42,6 +42,8 @@ const fdsnevent = seisplotjs.fdsnevent;
 const fdsnstation = seisplotjs.fdsnstation;
 const fdsndataselect = seisplotjs.fdsndataselect;
 
+seisplotjs.util.updateVersionText('.sp_version');
+
 // all tests should be object with testid, testname and test: function(datacenter, d3selector)
 
 // end test defs
