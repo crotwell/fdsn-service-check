@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "d3-selection": "^3.0.0",
-    "seisplotjs": "^3.2.6"
+    "seisplotjs": "^3.2.7"
   },
   "scripts": {
     "lint": "eslint 'src/**/*.js' ",
