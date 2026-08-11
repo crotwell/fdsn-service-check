@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "standalone": "npx esbuild src/serviceCheck.js --bundle --outfile=www/servicecheck_${npm_package_version}_standalone.mjs  --target=es2020 --format=esm",
     "serve": "npm run standalone && npx http-server www",
-    "prepare": "npm run compile"
+    "prepare": "npm run standalone"
   },
   "repository": {
     "type": "git",
